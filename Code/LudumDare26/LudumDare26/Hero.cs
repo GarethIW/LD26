@@ -63,9 +63,9 @@ namespace LudumDare26
             blankTex = content.Load<Texture2D>("blank");
 
             skeletonRenderer = new SkeletonRenderer(graphicsDevice);
-            Atlas atlas = new Atlas(graphicsDevice, Path.Combine(content.RootDirectory, "spineboy.atlas"));
+            Atlas atlas = new Atlas(graphicsDevice, Path.Combine(content.RootDirectory, "spinegirl.atlas"));
             SkeletonJson json = new SkeletonJson(atlas);
-            skeleton = new Skeleton(json.readSkeletonData("spineboy", File.ReadAllText(Path.Combine(content.RootDirectory, "spineboy.json"))));
+            skeleton = new Skeleton(json.readSkeletonData("spinegirl", File.ReadAllText(Path.Combine(content.RootDirectory, "spinegirl.json"))));
             skeleton.SetSkin("default");
             skeleton.SetSlotsToBindPose();
             Animations.Add("walk", skeleton.Data.FindAnimation("walk"));
