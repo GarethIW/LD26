@@ -8,34 +8,34 @@ using TiledLib;
 
 namespace LudumDare26
 {
-	public class Water
-	{
-		struct WaterColumn
-		{
-			public float TargetHeight;
-			public float Height;
-			public float Speed;
+    public class Water
+    {
+        struct WaterColumn
+        {
+            public float TargetHeight;
+            public float Height;
+            public float Speed;
 
-			public void Update(float dampening, float tension)
-			{
-				float x = TargetHeight - Height;
-				Speed += tension * x - Speed * dampening;
-				Height += Speed;
-			}
-		}
+            public void Update(float dampening, float tension)
+            {
+                float x = TargetHeight - Height;
+                Speed += tension * x - Speed * dampening;
+                Height += Speed;
+            }
+        }
 
-		PrimitiveBatch pb;
-		WaterColumn[] columns = new WaterColumn[201];
-		static Random rand = new Random();
+        PrimitiveBatch pb;
+        WaterColumn[] columns = new WaterColumn[201];
+        static Random rand = new Random();
 
-		public float Tension = 0.025f;
-		public float Dampening = 0.025f;
-		public float Spread = 0.25f;
+        public float Tension = 0.025f;
+        public float Dampening = 0.025f;
+        public float Spread = 0.25f;
 
-		RenderTarget2D metaballTarget, particlesTarget;
-		SpriteBatch spriteBatch;
-		AlphaTestEffect alphaTest;
-		Texture2D particleTexture;
+        RenderTarget2D metaballTarget, particlesTarget;
+        SpriteBatch spriteBatch;
+        AlphaTestEffect alphaTest;
+        Texture2D particleTexture;
 
         public int actualHeight = 900;
 
@@ -43,33 +43,37 @@ namespace LudumDare26
 
         Map gameMap;
 
-		private float Scale { get { return (bounds.Width) / (columns.Length - 1f); } }
+        private float ScaleWidth { get { return (bounds.Width) / (columns.Length - 1f); } }
+
+        public float Scale;
 
         Color topColor;
         Color bottomColor;
 
         public Rectangle bounds;
 
-		List<Particle> particles = new List<Particle>();
-		class Particle
-		{
-			public Vector2 Position;
-			public Vector2 Velocity;
-			public float Orientation;
+        List<Particle> particles = new List<Particle>();
+        class Particle
+        {
+            public Vector2 Position;
+            public Vector2 Velocity;
+            public float Orientation;
 
-			public Particle(Vector2 position, Vector2 velocity, float orientation)
-			{
-				Position = position;
-				Velocity = velocity;
-				Orientation = orientation;
-			}
-		}
-		
-		public Water(GraphicsDevice device, Map map, Rectangle dest, Color top, Color bottom)//, Texture2D particleTexture)
-		{
-			pb = new PrimitiveBatch(device);
-			//this.particleTexture = particleTexture;
-			spriteBatch = new SpriteBatch(device);
+            public Particle(Vector2 position, Vector2 velocity, float orientation)
+            {
+                Position = position;
+                Velocity = velocity;
+                Orientation = orientation;
+            }
+        }
+
+        public Water(GraphicsDevice device, Map map, Rectangle dest, Color top, Color bottom, float scale)//, Texture2D particleTexture)
+        {
+            Scale = scale;
+
+            pb = new PrimitiveBatch(device);
+            //this.particleTexture = particleTexture;
+            spriteBatch = new SpriteBatch(device);
             gameMap = map;
 
             topColor = top * 0.8f;
@@ -77,152 +81,136 @@ namespace LudumDare26
 
             bounds = dest;
 
-			//metaballTarget = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height);
-			//particlesTarget = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height);
+            //metaballTarget = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height);
+            //particlesTarget = new RenderTarget2D(device, device.Viewport.Width, device.Viewport.Height);
             //alphaTest = new AlphaTestEffect(device);
             //alphaTest.ReferenceAlpha = 175;
-			
+
             //var view = device.Viewport;
             //alphaTest.Projection = Matrix.CreateTranslation(-0.5f, -0.5f, 0) *
             //    Matrix.CreateOrthographicOffCenter(0, view.Width, view.Height, 0, 0, 1);
 
-            columns = new WaterColumn[bounds.Width/4];
+            columns = new WaterColumn[bounds.Width / 4];
 
-			for (int i = 0; i < columns.Length; i++)
-			{
-				columns[i] = new WaterColumn()
-				{
+            for (int i = 0; i < columns.Length; i++)
+            {
+                columns[i] = new WaterColumn()
+                {
                     Height = bounds.Height,
                     TargetHeight = bounds.Height,
-					Speed = 0
-				};
-			}
+                    Speed = 0
+                };
+            }
 
             rDeltas = new float[columns.Length];
             lDeltas = new float[columns.Length];
-		}
+        }
 
-		// Returns the height of the water at a given x coordinate.
-		public float GetHeight(float x)
-		{
-			if (x < 0 || x > bounds.Width)
+        // Returns the height of the water at a given x coordinate.
+        public float GetHeight(float x)
+        {
+            if (x < 0 || x > bounds.Width)
                 return bounds.Height;
 
-			return columns[(int)(x / Scale)].Height;
-		}
+            return columns[(int)(x / ScaleWidth)].Height;
+        }
 
-		void UpdateParticle(Particle particle)
-		{
-			const float Gravity = 0.3f;
-			particle.Velocity.Y += Gravity;
-			particle.Position += particle.Velocity;
-			particle.Orientation = GetAngle(particle.Velocity);
-		}
+        void UpdateParticle(Particle particle)
+        {
+            const float Gravity = 0.3f;
+            particle.Velocity.Y += Gravity;
+            particle.Position += particle.Velocity;
+            particle.Orientation = GetAngle(particle.Velocity);
+        }
 
-		public void Splash(float xPosition, float speed)
-		{
-            int index = (int)MathHelper.Clamp((xPosition - bounds.Left) / Scale, 0, columns.Length - 1);
-			for (int i = Math.Max(0, index - 0); i < Math.Min(columns.Length - 1, index + 1); i++)
-				columns[index].Speed = -speed;
+        public void Splash(float xPosition, float speed)
+        {
+            int index = (int)MathHelper.Clamp((xPosition - bounds.Left) / ScaleWidth, 0, columns.Length - 1);
+            for (int i = Math.Max(0, index - 0); i < Math.Min(columns.Length - 1, index + 1); i++)
+                columns[index].Speed = -speed;
 
-            if (speed > 40)
-			{
-			    CreateSplashParticles(xPosition, -speed);
-            }
 
-            
-		}
 
-		public void CreateSplashParticles(float xPosition, float speed)
-		{
-			float y = bounds.Bottom - GetHeight(xPosition);
+        }
 
-			
-			for (int i = 0; i < -speed / 8; i++)
-			{
-				Vector2 pos = new Vector2(xPosition, y) + GetRandomVector2(40);
-				Vector2 vel = FromPolar(MathHelper.ToRadians(GetRandomFloat(-120, -60)), GetRandomFloat(0, 0.5f * (float)Math.Sqrt(-speed)));
-				GameManager.ParticleController.Add(pos, vel*0.8f, 200, true, false, new Rectangle(8,0,8,8), 0f, topColor);
-			}
-		
-		}
 
-		private void CreateParticle(Vector2 pos, Vector2 velocity)
-		{
-			particles.Add(new Particle(pos, velocity, 0));
-		}
 
-		private Vector2 FromPolar(float angle, float magnitude)
-		{
-			return magnitude * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
-		}
+        private void CreateParticle(Vector2 pos, Vector2 velocity)
+        {
+            particles.Add(new Particle(pos, velocity, 0));
+        }
 
-		private float GetRandomFloat(float min, float max)
-		{
-			return (float)rand.NextDouble() * (max - min) + min;
-		}
+        private Vector2 FromPolar(float angle, float magnitude)
+        {
+            return magnitude * new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle));
+        }
 
-		private Vector2 GetRandomVector2(float maxLength)
-		{
-			return FromPolar(GetRandomFloat(-MathHelper.Pi, MathHelper.Pi), GetRandomFloat(0, maxLength));
-		}
+        private float GetRandomFloat(float min, float max)
+        {
+            return (float)rand.NextDouble() * (max - min) + min;
+        }
 
-		private float GetAngle(Vector2 vector)
-		{
-			return (float)Math.Atan2(vector.Y, vector.X);
-		}
+        private Vector2 GetRandomVector2(float maxLength)
+        {
+            return FromPolar(GetRandomFloat(-MathHelper.Pi, MathHelper.Pi), GetRandomFloat(0, maxLength));
+        }
+
+        private float GetAngle(Vector2 vector)
+        {
+            return (float)Math.Atan2(vector.Y, vector.X);
+        }
 
         double rippleTime = 0;
-        float[] lDeltas; 
-        float[] rDeltas; 
-		public void Update(GameTime gameTime)
-		{
+        float[] lDeltas;
+        float[] rDeltas;
+        public void Update(GameTime gameTime)
+        {
             rippleTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (rippleTime > 500)
             {
                 rippleTime = 0;
                 rippleX += 10;
-                if (rippleX >= 500 || rippleX>bounds.Width) rippleX = 0;
+                if (rippleX >= 500 || rippleX > bounds.Width) rippleX = 0;
                 for (int x = rippleX; x < bounds.Width; x += 500) Splash((float)x + bounds.X, 20f);
             }
             //if (rippleX >= (gameMap.Width * gameMap.TileWidth)) rippleX -= (gameMap.Width * gameMap.TileWidth);
 
-			for (int i = 0; i < columns.Length; i++)
-				columns[i].Update(Dampening, Tension);
+            for (int i = 0; i < columns.Length; i++)
+                columns[i].Update(Dampening, Tension);
 
-			
-			
-			// do some passes where columns pull on their neighbours
-			for (int j = 0; j < 8; j++)
-			{
-				for (int i = 0; i < columns.Length; i++)
-				{
-					if (i > 0)
-					{
-						lDeltas[i] = Spread * (columns[i].Height - columns[i - 1].Height);
-						columns[i - 1].Speed += lDeltas[i];
-					}
-					if (i < columns.Length - 1)
-					{
-						rDeltas[i] = Spread * (columns[i].Height - columns[i + 1].Height);
-						columns[i + 1].Speed += rDeltas[i];
-					}
-				}
 
-				for (int i = 0; i < columns.Length; i++)
-				{
-					if (i > 0)
-						columns[i - 1].Height += lDeltas[i];
-					if (i < columns.Length - 1)
-						columns[i + 1].Height += rDeltas[i];
-				}
-			}
 
-			//forreach (var particle in particles)
-			//	UpdateParticle(particle);
+            // do some passes where columns pull on their neighbours
+            for (int j = 0; j < 8; j++)
+            {
+                for (int i = 0; i < columns.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        lDeltas[i] = Spread * (columns[i].Height - columns[i - 1].Height);
+                        columns[i - 1].Speed += lDeltas[i];
+                    }
+                    if (i < columns.Length - 1)
+                    {
+                        rDeltas[i] = Spread * (columns[i].Height - columns[i + 1].Height);
+                        columns[i + 1].Speed += rDeltas[i];
+                    }
+                }
 
-			//particles = particles.Where(x => x.Position.X >= 0 && x.Position.X <= 800 && x.Position.Y - 5 <= GetHeight(x.Position.X)).ToList();
-		}
+                for (int i = 0; i < columns.Length; i++)
+                {
+                    if (i > 0)
+                        columns[i - 1].Height += lDeltas[i];
+                    if (i < columns.Length - 1)
+                        columns[i + 1].Height += rDeltas[i];
+                }
+            }
+
+            //forreach (var particle in particles)
+            //	UpdateParticle(particle);
+
+            //particles = particles.Where(x => x.Position.X >= 0 && x.Position.X <= 800 && x.Position.Y - 5 <= GetHeight(x.Position.X)).ToList();
+        }
 
         //public void DrawToRenderTargets()
         //{
@@ -268,46 +256,46 @@ namespace LudumDare26
         //    spriteBatch.Begin(0, null, null, null, null, alphaTest);
         //    spriteBatch.Draw(metaballTarget, Vector2.Zero, Color.White);
         //    spriteBatch.End();
-			
+
         //    // switch back to drawing to the backbuffer.
         //    device.SetRenderTarget(null);
         //}
 
-		public void Draw(Camera gameCamera)
-		{
-			Color lightBlue = new Color(0.2f, 0.5f, 1f);
+        public void Draw(Camera gameCamera)
+        {
+            Color lightBlue = new Color(0.2f, 0.5f, 1f);
 
-			// draw the particles 3 times to create a bevelling effect
+            // draw the particles 3 times to create a bevelling effect
             //spriteBatch.Begin();
             //spriteBatch.Draw(particlesTarget, -Vector2.One, new Color(0.8f, 0.8f, 1f));
             //spriteBatch.Draw(particlesTarget, Vector2.One, new Color(0f, 0f, 0.2f));
             //spriteBatch.Draw(particlesTarget, Vector2.Zero, lightBlue);
             //spriteBatch.End();
 
-			// draw the waves
-			pb.Begin(PrimitiveType.TriangleList, gameCamera.CameraMatrix);
+            // draw the waves
+            pb.Begin(PrimitiveType.TriangleList, gameCamera.CameraMatrix * Matrix.CreateScale(Scale));
             Color midnightBlue = new Color(0, 0, 0);// *0.9f;
-			lightBlue *= 0.8f;
+            lightBlue *= 0.8f;
 
             float bottom = bounds.Bottom;// - actualHeight) + 700;
-			float scale = Scale;
-			for (int i = 1; i < columns.Length; i++)
-			{
-				Vector2 p1 = new Vector2(bounds.Left + ((i - 1) * scale), bottom - columns[i - 1].Height);
-				Vector2 p2 = new Vector2(bounds.Left + (i * scale), bottom - columns[i].Height);
-				Vector2 p3 = new Vector2(p2.X, bottom);
-				Vector2 p4 = new Vector2(p1.X, bottom);
+            float scale = ScaleWidth;
+            for (int i = 1; i < columns.Length; i++)
+            {
+                Vector2 p1 = new Vector2(bounds.Left + ((i - 1) * scale), bottom - columns[i - 1].Height);
+                Vector2 p2 = new Vector2(bounds.Left + (i * scale), bottom - columns[i].Height);
+                Vector2 p3 = new Vector2(p2.X, bottom);
+                Vector2 p4 = new Vector2(p1.X, bottom);
 
-				pb.AddVertex(p1, topColor);
-				pb.AddVertex(p2, topColor);
-				pb.AddVertex(p3, bottomColor);
+                pb.AddVertex(p1, topColor);
+                pb.AddVertex(p2, topColor);
+                pb.AddVertex(p3, bottomColor);
 
-				pb.AddVertex(p1, topColor);
-				pb.AddVertex(p3, bottomColor);
-				pb.AddVertex(p4, bottomColor);
-			}
+                pb.AddVertex(p1, topColor);
+                pb.AddVertex(p3, bottomColor);
+                pb.AddVertex(p4, bottomColor);
+            }
 
-			pb.End();
-		}
-	}
+            pb.End();
+        }
+    }
 }

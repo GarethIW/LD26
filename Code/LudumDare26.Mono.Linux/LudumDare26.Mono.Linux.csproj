@@ -44,6 +44,9 @@
     <Compile Include="..\LudumDare26\LudumDare26\Hero.cs">
       <Link>Hero.cs</Link>
     </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\PrimitiveBatch.cs">
+      <Link>PrimitiveBatch.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Spine\Animation.cs">
       <Link>Spine\Animation.cs</Link>
     </Compile>
@@ -101,6 +104,9 @@
     <Compile Include="..\LudumDare26\LudumDare26\Spine\SpriteBatcher.cs">
       <Link>Spine\SpriteBatcher.cs</Link>
     </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Water.cs">
+      <Link>Water.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -125,12 +131,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
-      <Link>Content\tilesheet.png</Link>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.png">
+      <Link>Content\spinegirl.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.png">
-      <Link>Content\spineboy.png</Link>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
+      <Link>Content\tilesheet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\Linux\SDL.dll">
@@ -158,12 +164,14 @@
       <Link>Content\map.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.atlas">
-      <Link>Content\spineboy.atlas</Link>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.atlas">
+      <Link>Content\spinegirl.atlas</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.json">
-      <Link>Content\spineboy.json</Link>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.json">
+      <Link>Content\spinegirl.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

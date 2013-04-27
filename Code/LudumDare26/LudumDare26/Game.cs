@@ -29,8 +29,14 @@ namespace LudumDare26
 
         Texture2D blankTex;
 
+        List<Water> Waters = new List<Water>();
+
         float[] LayerDepths;
         Color[] LayerColors;
+
+        DepthStencilState dss;
+        DepthStencilState dss2;
+        AlphaTestEffect ate; 
 
         public LudumDareGame()
         {
@@ -78,7 +84,7 @@ namespace LudumDare26
             for (int i = 0; i < LayerDepths.Length; i++)
             {
                 LayerDepths[i] = scale;
-                LayerColors[i] = Color.White * scale;
+                LayerColors[i] = Color.White * (scale * 0.5f);
                 if (scale > 0f) scale -= 0.25f;
             }
 
@@ -89,6 +95,35 @@ namespace LudumDare26
             gameCamera.Position = gameHero.Position;
             gameCamera.Target = gameHero.Position;
 
+            for (scale = 1.25f; scale > 0.5f; scale -= 0.1f)
+            {
+                Waters.Add(new Water(GraphicsDevice, gameMap, new Rectangle(0, (gameMap.Height * gameMap.TileHeight) - 200, gameMap.Width * gameMap.TileWidth, 600), new Color(50, 128, 255), Color.Black, scale));
+            }
+
+            ate = new AlphaTestEffect(GraphicsDevice);
+            ate.AlphaFunction = CompareFunction.Greater;
+            ate.ReferenceAlpha = 0;
+            ate.DiffuseColor = new Vector3(0.5f, 0.5f, 0.5f);
+            Matrix projection = Matrix.CreateOrthographicOffCenter(0,
+                1280,
+                720,
+                0, 0, 1);
+            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
+            ate.Projection = halfPixelOffset * projection;
+
+            dss = new DepthStencilState();
+            dss.StencilEnable = true;
+            dss.StencilFunction = CompareFunction.Always;
+            dss.StencilPass = StencilOperation.Replace;
+            dss.ReferenceStencil = 1;
+            dss.DepthBufferEnable = true;
+
+            dss2 = new DepthStencilState();
+            dss2.StencilPass = StencilOperation.Zero;
+            dss2.StencilEnable = true;
+            dss2.DepthBufferEnable = true;
+            dss2.StencilFunction = CompareFunction.Equal;
+            dss2.ReferenceStencil = 1;
         }
 
         /// <summary>
@@ -134,7 +169,7 @@ namespace LudumDare26
             for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
             {
                 LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * (1f-(targetScale*0.75f)), 0.1f);
+                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * (targetScale * 0.5f), 0.1f);
                 if (targetScale > 0f) targetScale -= 0.333f;
             }
             if (gameHero.Layer > 0)
@@ -153,6 +188,9 @@ namespace LudumDare26
 
             lks = ks;
 
+            foreach (Water w in Waters)
+                w.Update(gameTime);
+
             base.Update(gameTime);
         }
 
@@ -162,29 +200,48 @@ namespace LudumDare26
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.White);
+            GraphicsDevice.Clear(Color.Black);
+
+            
 
             // TODO: Add your drawing code here
             for (int l = LayerDepths.Length-1; l >=0; l--)
             {
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]));
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l<gameHero.Layer?LayerColors[l]:Color.White);
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White);
-                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White);
+                foreach (Water w in Waters.OrderBy(wat => wat.Scale))
+                    if (w.Scale < LayerDepths[l])
+                    {
+                        if (l == LayerDepths.Length - 1) w.Draw(gameCamera);
+                        else if (w.Scale >= LayerDepths[l + 1]) w.Draw(gameCamera);
+                    }
+
+
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
+                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
                 spriteBatch.End();
+
+                
 
                 if (l > gameHero.Layer)
                 {
-                    spriteBatch.Begin();
-                    spriteBatch.Draw(blankTex, GraphicsDevice.Viewport.Bounds, LayerColors[l]);
-                    spriteBatch.End();
+                    //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, dss, null, ate, gameCamera.CameraMatrix);// * Matrix.CreateScale(LayerDepths[l]));
+                    //gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White * 0f);
+                    //gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White * 0f);
+                    //gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White * 0f);
+                    //spriteBatch.End();
+
+                    //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, dss2, null, null);
+                    //spriteBatch.Draw(blankTex, GraphicsDevice.Viewport.Bounds, new Color(255, 255, 255, 1));//LayerColors[l]);
+                    //spriteBatch.End();
                 }
 
                 if(l==gameHero.Layer)
                     gameHero.Draw(GraphicsDevice, spriteBatch, gameCamera);
             }
 
-            
+            foreach (Water w in Waters.OrderBy(wat => wat.Scale))
+                if (w.Scale >= LayerDepths[0]) w.Draw(gameCamera);
 
             base.Draw(gameTime);
         }

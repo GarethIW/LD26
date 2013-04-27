@@ -44,6 +44,9 @@
     <Compile Include="..\LudumDare26\LudumDare26\Hero.cs">
       <Link>Hero.cs</Link>
     </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\PrimitiveBatch.cs">
+      <Link>PrimitiveBatch.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Spine\Animation.cs">
       <Link>Spine\Animation.cs</Link>
     </Compile>
@@ -100,6 +103,9 @@
     </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Spine\SpriteBatcher.cs">
       <Link>Spine\SpriteBatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Water.cs">
+      <Link>Water.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
