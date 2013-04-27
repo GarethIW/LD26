@@ -21,14 +21,14 @@ namespace LudumDare26
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        BlendState multiBlend;
-        Effect tileEffect;
-
         Map gameMap;
         Camera gameCamera;
         Hero gameHero;
 
+        KeyboardState lks;
+
         float[] LayerDepths;
+        Color[] LayerColors;
 
         public LudumDareGame()
         {
@@ -64,17 +64,17 @@ namespace LudumDare26
             // TODO: use this.Content to load your game content here
             gameMap = Content.Load<Map>("map");
 
-            tileEffect = Content.Load<Effect>("tileeffect");
-
             int layerCount = 0;
             foreach (Layer ml in gameMap.Layers)
                 if (ml is TileLayer) layerCount++;
 
             LayerDepths = new float[layerCount];
+            LayerColors = new Color[layerCount];
             float scale = 1f;
             for (int i = 0; i < LayerDepths.Length; i++)
             {
                 LayerDepths[i] = scale;
+                LayerColors[i] = Color.White * scale;
                 if (scale > 0f) scale -= 0.25f;
             }
 
@@ -85,10 +85,6 @@ namespace LudumDare26
             gameCamera.Position = gameHero.Position;
             gameCamera.Target = gameHero.Position;
 
-            multiBlend = new BlendState();
-            multiBlend.ColorSourceBlend = Blend.BlendFactor;
-            multiBlend.ColorDestinationBlend = Blend.Zero;
-            multiBlend.BlendFactor = new Color(0.5f, 0.5f, 0.5f, 1f);
         }
 
         /// <summary>
@@ -121,11 +117,35 @@ namespace LudumDare26
             if (ks.IsKeyDown(Keys.Up)) gameHero.Jump();
             if (ks.IsKeyDown(Keys.Down)) gameHero.Crouch();
 
+            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space)) gameHero.UsePortal(gameMap);
+
             gameHero.Update(gameTime, gameCamera, gameMap);
 
             gameCamera.Target = gameHero.Position;
             gameCamera.Update(GraphicsDevice.Viewport.Bounds);
 
+
+            // Scale layers according to player's layer
+            float targetScale = 1f;
+            for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
+            {
+                LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
+                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * targetScale, 0.1f);
+                if (targetScale > 0f) targetScale -= 0.25f;
+            }
+            if (gameHero.Layer > 0)
+            {
+                targetScale = 1.5f;
+                for (int l = gameHero.Layer-1; l >=0; l--)
+                {
+                    LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
+                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 1f, 0.1f);
+                    else LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 0f, 0.1f);
+                    targetScale += 0.5f;
+                }
+            }
+
+            lks = ks;
 
             base.Update(gameTime);
         }
@@ -139,14 +159,18 @@ namespace LudumDare26
             GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
-            for (int l = 0; l < LayerDepths.Length; l++)
+            for (int l = LayerDepths.Length-1; l >=0; l--)
             {
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, tileEffect, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]));
-                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, new Color(LayerDepths[l], LayerDepths[l], LayerDepths[l]));
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]));
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, LayerColors[l]);
+                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, LayerColors[l]);
                 spriteBatch.End();
+
+                if(l==gameHero.Layer)
+                    gameHero.Draw(GraphicsDevice, spriteBatch, gameCamera);
             }
 
-            gameHero.Draw(GraphicsDevice, spriteBatch, gameCamera);
+            
 
             base.Draw(gameTime);
         }

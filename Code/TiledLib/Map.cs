@@ -358,8 +358,8 @@ namespace TiledLib
                 {
                     for (int y = minY; y < maxY; y++)
                     {
-                        if ((new Vector2((x * TileWidth) + (TileWidth/2), (y * TileHeight) + (TileHeight/2)) - new Vector2(worldArea.Center.X, worldArea.Center.Y)).Length() < gameCamera.Width * 0.75)
-                        {
+                        //if ((new Vector2((x * TileWidth) + (TileWidth / 2), (y * TileHeight) + (TileHeight / 2)) - new Vector2(worldArea.Center.X, worldArea.Center.Y)).Length() < gameCamera.Width * 0.75)
+                        //{
                             Tile tile = tileLayer.Tiles[x, y];
 
                             if (tile == null)
@@ -369,7 +369,7 @@ namespace TiledLib
 
 
                             spriteBatch.Draw(tile.Texture, r, tile.Source, color);
-                        }
+                        //}
 
                     }
                 }
@@ -424,14 +424,12 @@ namespace TiledLib
             return null;
         }
 
-        public bool CheckTileCollision(Vector2 position)
+        public bool CheckTileCollision(Vector2 position, int layer)
         {
-            for(int i=0;i<Layers.Count;i++)
-            {
-                if (!Layers[i].Properties.Contains("Collision"))
-                    continue;
+            
 
-                TileLayer tileLayer = Layers[i] as TileLayer;
+                TileLayer tileLayer = GetLayer(layer.ToString()) as TileLayer;
+                if (tileLayer == null) return false;
 
                 position.X = (int)position.X;
                 position.Y = (int)position.Y;
@@ -439,7 +437,7 @@ namespace TiledLib
                 Vector2 tilePosition = new Vector2((int)(position.X / TileWidth), (int)(position.Y / TileHeight));
 
                 if (tilePosition.X < 0 || tilePosition.Y < 0 || tilePosition.X > Width - 1 || tilePosition.Y > Height - 1)
-                    continue;
+                    return false;
 
                 Tile collisionTile = tileLayer.Tiles[(int)tilePosition.X, (int)tilePosition.Y];
 
@@ -450,40 +448,33 @@ namespace TiledLib
                     return false;
                 
                 return true;
-            }
-
-            return false;
         }
 
-        public Rectangle? CheckTileCollisionIntersect(Vector2 position, Rectangle rect)
+        public Rectangle? CheckTileCollisionIntersect(Vector2 position, Rectangle rect, int layer)
         {
-            for (int i = 0; i < Layers.Count; i++)
-            {
-                if (!Layers[i].Properties.Contains("Collision"))
-                    continue;
+            TileLayer tileLayer = GetLayer(layer.ToString()) as TileLayer;
+            if (tileLayer == null) return null;
 
-                TileLayer tileLayer = Layers[i] as TileLayer;
+            position.X = (int)position.X;
+            position.Y = (int)position.Y;
 
-                position.X = (int)position.X;
-                position.Y = (int)position.Y;
+            Vector2 tilePosition = new Vector2((int)(position.X / TileWidth), (int)(position.Y / TileHeight));
 
-                Vector2 tilePosition = new Vector2((int)(position.X / TileWidth), (int)(position.Y / TileHeight));
+            if (tilePosition.X < 0 || tilePosition.Y < 0 || tilePosition.X > Width - 1 || tilePosition.Y > Height - 1)
+                return null;
 
-                if (tilePosition.X < 0 || tilePosition.Y < 0 || tilePosition.X > Width - 1 || tilePosition.Y > Height - 1)
-                    continue;
-
-                Tile collisionTile = tileLayer.Tiles[(int)tilePosition.X, (int)tilePosition.Y];
+            Tile collisionTile = tileLayer.Tiles[(int)tilePosition.X, (int)tilePosition.Y];
 
                 
 
-                if (collisionTile == null)
-                    return null;
+            if (collisionTile == null)
+                return null;
 
-                if (collisionTile.Properties.Contains("Portal"))
-                    return null;
+            if (collisionTile.Properties.Contains("Portal"))
+                return null;
                 
-                return Rectangle.Intersect(rect, new Rectangle((int)tilePosition.X * TileWidth, (int)tilePosition.Y * TileHeight, TileWidth, TileHeight));
-            }
+            return Rectangle.Intersect(rect, new Rectangle((int)tilePosition.X * TileWidth, (int)tilePosition.Y * TileHeight, TileWidth, TileHeight));
+            
 
             return null;
         }

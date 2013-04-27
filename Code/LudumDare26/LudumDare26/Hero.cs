@@ -192,8 +192,35 @@ namespace LudumDare26
             
         }
 
+        public void UsePortal(Map gameMap)
+        {
+            CheckForPortal(gameMap, Position);
+            CheckForPortal(gameMap, Position - new Vector2(0, gameMap.TileHeight));
+        }
+
+        void CheckForPortal(Map gameMap, Vector2 pos)
+        {
+            if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight] != null)
+            {
+                if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight].Properties.Contains("Portal"))
+                {
+                    if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight].Properties["Dir"] == "In")
+                    {
+                        Layer++;
+                        return;
+                    }
+                    if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, ((int)pos.Y / gameMap.TileHeight)].Properties["Dir"] == "Out")
+                    {
+                        Layer--;
+                        return;
+                    }
+                }
+            }
+        }
+
         public void Jump()
         {
+
             if (grabbed && (Position - grabbedPosition).Length()<5f && !oppositeDirPushed)
             {
                 climbing = true;
@@ -244,10 +271,10 @@ namespace LudumDare26
             // Check for ledge grabs
             if ((jumping || falling) && !justUngrabbed)
             {
-                if (Speed.X<0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top)))
-                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top - 50)) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top - 50)) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top)))
+                if (Speed.X<0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top), Layer))
+                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top - 50), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top - 50), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top), Layer))
                     {
                         grabbed = true;
                         jumping = false;
@@ -259,10 +286,10 @@ namespace LudumDare26
                         faceDir = -1;
                     }
 
-                if (Speed.X>0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top)))
-                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top - 50)) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top - 50)) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top)))
+                if (Speed.X > 0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top), Layer))
+                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top - 50), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top - 50), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top), Layer))
                     {
                         grabbed = true;
                         jumping = false;
@@ -350,7 +377,7 @@ namespace LudumDare26
             for (float x = collisionRect.Left+5; x < collisionRect.Right-5; x += 1)
             {
                 Vector2 checkPos = new Vector2(x, collisionRect.Top);
-                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect);
+                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect, Layer);
                 if (collRect.HasValue) return collRect;
             }
 
@@ -361,7 +388,7 @@ namespace LudumDare26
             for (float x = collisionRect.Left+5; x < collisionRect.Right-5; x += 1)
             {
                 Vector2 checkPos = new Vector2(x, collisionRect.Bottom);
-                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect);
+                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect, Layer);
                 if (collRect.HasValue) return collRect;
             }
 
@@ -372,7 +399,7 @@ namespace LudumDare26
             for (float y = collisionRect.Top; y < collisionRect.Bottom; y += 1)
             {
                 Vector2 checkPos = new Vector2(collisionRect.Right, y);
-                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect);
+                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect, Layer);
                 if (collRect.HasValue) return collRect;
             }
 
@@ -383,7 +410,7 @@ namespace LudumDare26
             for (float y = collisionRect.Top; y < collisionRect.Bottom; y += 1)
             {
                 Vector2 checkPos = new Vector2(collisionRect.Left, y);
-                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect);
+                Rectangle? collRect = gameMap.CheckTileCollisionIntersect(checkPos, collisionRect, Layer);
                 if (collRect.HasValue) return collRect;
             }
 

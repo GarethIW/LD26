@@ -37,7 +37,6 @@ namespace TiledContentPipeline
 				OpaqueDataDictionary data = new OpaqueDataDictionary();
 				data.Add("GenerateMipmaps", false);
 				data.Add("ResizeToPowerOfTwo", false);
-                data.Add("PremultiplyAlpha", false);
 				data.Add("TextureFormat", TextureProcessorOutputFormat.Color);
 				data.Add("ColorKeyEnabled", tileSet.ColorKey.HasValue);
 				data.Add("ColorKeyColor", tileSet.ColorKey.HasValue ? tileSet.ColorKey.Value : Microsoft.Xna.Framework.Color.Magenta);

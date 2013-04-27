@@ -15,9 +15,14 @@
    </properties>
   </tile>
  </tileset>
+ <layer name="2" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3SMQoAIAwDwKr//7Org1sHidxBoGMCrQIAAACAnvm6QMO4JE1q73XciRtuv5O2AQAAAOA3G1Zt+AcQJwAA
+  </data>
+ </layer>
  <layer name="1" width="50" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3TMQrAIAxAUdve/86dsgTUCqWY8h64qMMPaGsAAAAAQDjSqii37zrLOTjrNcfe9X7OsvxWZm9n9X4FT7orzDpr2rU7G3VWmSH87a8AAADwnRtONxyXECcAAA==
+   H4sIAAAAAAAAC+3VsQoAIQgA0Or+/59bajROaDHeA2lRzEFsDQAAAOrrQQBnr+xL9f9v1ef41vt3jnGh103ZOxLdnqg2mw8AAABA3gTkJAdyECcAAA==
   </data>
  </layer>
  <layer name="0" width="50" height="50">
@@ -25,7 +30,12 @@
    <property name="Collision" value="On"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3OwQkAMAgAMXX/odsdFERI4P4XAQAAAABwS20PfDkcAAAAAH0Pp/iukBAnAAA=
+   H4sIAAAAAAAAC+3PMQoAIAwDwNb/P9oPOAgW4nAHXZukCgAAAICEThcYYsc/urI71tCfmx1TWafc1AEAAADwbgOLDa3TECcAAA==
+  </data>
+ </layer>
+ <layer name="0Decal" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
   </data>
  </layer>
  <objectgroup name="Spawn" width="50" height="50">
