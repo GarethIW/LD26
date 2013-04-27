@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="50" tileheight="50">
  <tileset firstgid="1" name="tile" tilewidth="50" tileheight="50">
-  <image source="tile.png" width="50" height="50"/>
+  <image source="tile.png" width="150" height="50"/>
+  <tile id="1">
+   <properties>
+    <property name="Dir" value="In"/>
+    <property name="Portal" value="True"/>
+   </properties>
+  </tile>
+  <tile id="2">
+   <properties>
+    <property name="Dir" value="Out"/>
+    <property name="Portal" value="True"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="Tile Layer 1" width="50" height="50">
+ <layer name="1" width="50" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3TMQrAIAxAUdve/86dsgTUCqWY8h64qMMPaGsAAAAAQDjSqii37zrLOTjrNcfe9X7OsvxWZm9n9X4FT7orzDpr2rU7G3VWmSH87a8AAADwnRtONxyXECcAAA==
+  </data>
+ </layer>
+ <layer name="0" width="50" height="50">
   <properties>
    <property name="Collision" value="On"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+2USQ7AIAgA9f+f7qUnU1NANpOZhJsKA5E5xphv3Mpc4lbw6IXVY71X3Y/q/F5kekTO77Z57Ors7iGdXXePlSiP7F0l9ei+e709/hwyPaz5JQ5RPl7ziHawvik9q60/ykFb32l+Lae9iejlyV1vj6h9Y6kDDzyseO8pTw/NuxYPzX7ImlG2R5RPlUf2//nCy6PaxdODIHYBAAAAAAAAAPU8/96G1RAnAAA=
+   H4sIAAAAAAAAC+3OwQkAMAgAMXX/odsdFERI4P4XAQAAAABwS20PfDkcAAAAAH0Pp/iukBAnAAA=
   </data>
  </layer>
+ <objectgroup name="Spawn" width="50" height="50">
+  <object x="961" y="1242" width="79" height="109"/>
+ </objectgroup>
 </map>

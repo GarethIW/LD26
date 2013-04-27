@@ -21,9 +21,14 @@ namespace LudumDare26
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        BlendState multiBlend;
+        Effect tileEffect;
+
         Map gameMap;
         Camera gameCamera;
         Hero gameHero;
+
+        float[] LayerDepths;
 
         public LudumDareGame()
         {
@@ -58,13 +63,32 @@ namespace LudumDare26
 
             // TODO: use this.Content to load your game content here
             gameMap = Content.Load<Map>("map");
-            
-            gameHero = new Hero(new Vector2(1200, 1000));
+
+            tileEffect = Content.Load<Effect>("tileeffect");
+
+            int layerCount = 0;
+            foreach (Layer ml in gameMap.Layers)
+                if (ml is TileLayer) layerCount++;
+
+            LayerDepths = new float[layerCount];
+            float scale = 1f;
+            for (int i = 0; i < LayerDepths.Length; i++)
+            {
+                LayerDepths[i] = scale;
+                if (scale > 0f) scale -= 0.25f;
+            }
+
+            gameHero = new Hero(Helper.PtoV((gameMap.GetLayer("Spawn") as MapObjectLayer).Objects[0].Location.Center));
             gameHero.LoadContent(Content, GraphicsDevice);
 
             gameCamera = new Camera(GraphicsDevice.Viewport, gameMap);
             gameCamera.Position = gameHero.Position;
             gameCamera.Target = gameHero.Position;
+
+            multiBlend = new BlendState();
+            multiBlend.ColorSourceBlend = Blend.BlendFactor;
+            multiBlend.ColorDestinationBlend = Blend.Zero;
+            multiBlend.BlendFactor = new Color(0.5f, 0.5f, 0.5f, 1f);
         }
 
         /// <summary>
@@ -112,12 +136,15 @@ namespace LudumDare26
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, null, null, null, null, gameCamera.CameraMatrix);
-            gameMap.Draw(spriteBatch, gameCamera);
-            spriteBatch.End();
+            for (int l = 0; l < LayerDepths.Length; l++)
+            {
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, tileEffect, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]));
+                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, new Color(LayerDepths[l], LayerDepths[l], LayerDepths[l]));
+                spriteBatch.End();
+            }
 
             gameHero.Draw(GraphicsDevice, spriteBatch, gameCamera);
 

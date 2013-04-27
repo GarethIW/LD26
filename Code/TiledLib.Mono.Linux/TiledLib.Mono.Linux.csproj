@@ -8,8 +8,8 @@
     <ProjectGuid>{032D8AFE-D713-48C8-9A4E-93F31A9E7CC1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TiledLib.Mono.Linux</RootNamespace>
-    <AssemblyName>TiledLib.Mono.Linux</AssemblyName>
+    <RootNamespace>TiledLib</RootNamespace>
+    <AssemblyName>TiledLib</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">

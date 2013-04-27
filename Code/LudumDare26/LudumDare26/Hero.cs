@@ -16,6 +16,8 @@ namespace LudumDare26
         public Vector2 Position;
         public Vector2 Speed;
 
+        public int Layer = 0;
+
         Vector2 gravity = new Vector2(0f, 0.25f);
 
         Rectangle collisionRect = new Rectangle(0, 0, 75, 130);
@@ -24,12 +26,9 @@ namespace LudumDare26
 
         SkeletonRenderer skeletonRenderer;
         Skeleton skeleton;
-        Animation walkAnimation;
-        Animation jumpAnimation;
-        Animation crawlAnimation;
-        Animation fallAnimation;
-        Animation grabAnimation;
-        Animation climbAnimation;
+
+        Dictionary<string, Animation> Animations = new Dictionary<string, Animation>();
+
         float animTime;
 
         int faceDir = 1;
@@ -40,6 +39,8 @@ namespace LudumDare26
         bool falling = false;
         bool grabbed = false;
         bool climbing = false;
+
+        bool oppositeDirPushed = false;
 
         bool justUngrabbed = false;
 
@@ -60,12 +61,12 @@ namespace LudumDare26
             skeleton = new Skeleton(json.readSkeletonData("spineboy", File.ReadAllText(Path.Combine(content.RootDirectory, "spineboy.json"))));
             skeleton.SetSkin("default");
             skeleton.SetSlotsToBindPose();
-            walkAnimation = skeleton.Data.FindAnimation("walk");
-            jumpAnimation = skeleton.Data.FindAnimation("jump");
-            crawlAnimation = skeleton.Data.FindAnimation("crawl");
-            fallAnimation = skeleton.Data.FindAnimation("fall");
-            grabAnimation = skeleton.Data.FindAnimation("grab");
-            climbAnimation = skeleton.Data.FindAnimation("climb");
+            Animations.Add("walk", skeleton.Data.FindAnimation("walk"));
+            Animations.Add("jump", skeleton.Data.FindAnimation("jump"));
+            Animations.Add("crawl", skeleton.Data.FindAnimation("crawl"));
+            Animations.Add("fall", skeleton.Data.FindAnimation("fall"));
+            Animations.Add("grab", skeleton.Data.FindAnimation("grab"));
+            Animations.Add("climb", skeleton.Data.FindAnimation("climb"));
 
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
@@ -84,18 +85,18 @@ namespace LudumDare26
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
                 if (!crouching)
                 {
-                    walkAnimation.Mix(skeleton, animTime, true, 0.3f);
+                    Animations["walk"].Mix(skeleton, animTime, true, 0.3f);
                 }
                 else
                 {
-                    crawlAnimation.Mix(skeleton, animTime, true, 0.5f);
+                    Animations["crawl"].Mix(skeleton, animTime, true, 0.5f);
                 }
             }
 
             if (jumping)
             {
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
-                jumpAnimation.Mix(skeleton, animTime, false, 0.5f);
+                Animations["jump"].Mix(skeleton, animTime, false, 0.5f);
             }
 
             if (crouching && !jumping)
@@ -106,7 +107,7 @@ namespace LudumDare26
                 if (!walking)
                 {
                     animTime = 0;
-                    crawlAnimation.Mix(skeleton, animTime, false, 0.5f);
+                    Animations["crawl"].Mix(skeleton, animTime, false, 0.5f);
                 }
             }
             else
@@ -122,7 +123,7 @@ namespace LudumDare26
                 if (Speed.Y > 1)
                 {
                     animTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
-                    fallAnimation.Mix(skeleton, animTime, true, 0.75f);
+                    Animations["fall"].Mix(skeleton, animTime, true, 0.75f);
                 }
             }
 
@@ -130,16 +131,16 @@ namespace LudumDare26
             {
                 Position = Vector2.Lerp(Position, grabbedPosition, 0.1f);
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
-                grabAnimation.Mix(skeleton, animTime, true, 0.3f);
+                Animations["grab"].Mix(skeleton, animTime, true, 0.3f);
             }
 
             if (climbing)
             {
                 //Position = Vector2.Lerp(Position, grabbedPosition, 0.1f);
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 500f;
-                climbAnimation.Apply(skeleton, animTime, false);
+                Animations["climb"].Apply(skeleton, animTime, false);
 
-                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 155), (0.07f/grabAnimation.Duration) * animTime);
+                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 155), (0.07f/Animations["grab"].Duration) * animTime);
 
                 if ((Position - (grabbedPosition - new Vector2(20 * (-faceDir), 155))).Length() < 5f)
                     climbing = false;
@@ -159,6 +160,7 @@ namespace LudumDare26
             skeleton.UpdateWorldTransform();
 
             walking = false;
+            oppositeDirPushed = false;
             Speed.X = 0f;
         }
 
@@ -177,6 +179,11 @@ namespace LudumDare26
 
         public void MoveLeftRight(float dir)
         {
+            if (grabbed)
+            {
+                if ((int)dir != faceDir) oppositeDirPushed = true;
+            }
+
             if (grabbed || climbing) return;
             if (dir > 0) faceDir = 1; else faceDir = -1;
 
@@ -187,7 +194,7 @@ namespace LudumDare26
 
         public void Jump()
         {
-            if (grabbed && (Position - grabbedPosition).Length()<5f)
+            if (grabbed && (Position - grabbedPosition).Length()<5f && !oppositeDirPushed)
             {
                 climbing = true;
                 grabbed = false;
@@ -195,10 +202,22 @@ namespace LudumDare26
                 return;
             }
 
-            if (!jumping && !crouching && !falling && !climbing && !grabbed)
+            if (!jumping && !crouching && !falling && !climbing && (!grabbed || oppositeDirPushed))
             {
-                jumping = true;
-                animTime = 0;
+                if (oppositeDirPushed)
+                {
+                    faceDir = -faceDir;
+                    Speed.X = (faceDir) * 4f;
+                    Position.X += (faceDir * 30f);
+                    grabbed = false;
+                    jumping = true;
+                    animTime = Animations["jump"].Duration *0.3f;
+                }
+                else
+                {
+                    jumping = true;
+                    animTime = 0;
+                }
                 Speed.Y = -9f;
             }
         }

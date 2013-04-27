@@ -445,7 +445,11 @@ namespace TiledLib
 
                 if (collisionTile == null)
                     return false;
-                else return true;
+
+                if (collisionTile.Properties.Contains("Portal"))
+                    return false;
+                
+                return true;
             }
 
             return false;
@@ -470,9 +474,15 @@ namespace TiledLib
 
                 Tile collisionTile = tileLayer.Tiles[(int)tilePosition.X, (int)tilePosition.Y];
 
+                
+
                 if (collisionTile == null)
                     return null;
-                else return Rectangle.Intersect(rect, new Rectangle((int)tilePosition.X * TileWidth, (int)tilePosition.Y * TileHeight, TileWidth, TileHeight));
+
+                if (collisionTile.Properties.Contains("Portal"))
+                    return null;
+                
+                return Rectangle.Intersect(rect, new Rectangle((int)tilePosition.X * TileWidth, (int)tilePosition.Y * TileHeight, TileWidth, TileHeight));
             }
 
             return null;

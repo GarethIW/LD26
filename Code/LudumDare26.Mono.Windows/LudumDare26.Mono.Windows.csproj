@@ -38,6 +38,9 @@
     <Compile Include="..\LudumDare26\LudumDare26\Game.cs">
       <Link>Game.cs</Link>
     </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Helper.cs">
+      <Link>Helper.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Hero.cs">
       <Link>Hero.cs</Link>
     </Compile>
