@@ -113,6 +113,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
+      <Link>Content\tilesheet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.png">
       <Link>Content\spineboy.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -140,10 +144,6 @@
     </Content>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.json">
       <Link>Content\spineboy.json</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\tile.xnb">
-      <Link>Content\tile.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

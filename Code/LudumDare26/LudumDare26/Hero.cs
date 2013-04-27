@@ -18,9 +18,11 @@ namespace LudumDare26
 
         public int Layer = 0;
 
+        public float Scale = 0.6f;
+
         Vector2 gravity = new Vector2(0f, 0.25f);
 
-        Rectangle collisionRect = new Rectangle(0, 0, 75, 130);
+        Rectangle collisionRect = new Rectangle(0, 0, 85, 150);
 
         Texture2D blankTex;
 
@@ -39,6 +41,11 @@ namespace LudumDare26
         bool falling = false;
         bool grabbed = false;
         bool climbing = false;
+
+        bool teleporting = false;
+        int teleportingDir = 0;
+        float teleportScale = 1f;
+        public bool teleportFinished = false;
 
         bool oppositeDirPushed = false;
 
@@ -70,6 +77,9 @@ namespace LudumDare26
 
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
+            skeleton.RootBone.ScaleX = Scale;
+            skeleton.RootBone.ScaleY = Scale;
+
             skeleton.UpdateWorldTransform();
         }
 
@@ -112,8 +122,8 @@ namespace LudumDare26
             }
             else
             {
-                collisionRect.Width = 75;
-                collisionRect.Height = 130;
+                collisionRect.Width = 85;
+                collisionRect.Height = 150;
             }
 
             if (falling)
@@ -140,16 +150,35 @@ namespace LudumDare26
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 500f;
                 Animations["climb"].Apply(skeleton, animTime, false);
 
-                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 155), (0.07f/Animations["grab"].Duration) * animTime);
+                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 185), (0.08f/Animations["grab"].Duration) * animTime);
 
-                if ((Position - (grabbedPosition - new Vector2(20 * (-faceDir), 155))).Length() < 5f)
+                if ((Position - (grabbedPosition - new Vector2(20 * (-faceDir), 185))).Length() < 5f)
                     climbing = false;
             }
 
+            if (teleporting)
+            {
+                teleportScale = MathHelper.Lerp(teleportScale, 0f, 0.1f);
+                if (teleportScale < 0.02f)
+                {
+                    Layer += teleportingDir;
+                    teleporting = false;
+                    teleportFinished = false;
+                }
+            }
+            else
+            {
+                if(teleportFinished)
+                    teleportScale = MathHelper.Lerp(teleportScale, 1f, 0.1f);
+            }
+
+            skeleton.RootBone.ScaleX = Scale * teleportScale;
+            skeleton.RootBone.ScaleY = Scale * teleportScale;
+
+    
             Position += Speed;
             collisionRect.Location = new Point((int)Position.X - (collisionRect.Width / 2), (int)Position.Y - (collisionRect.Height));
             CheckCollision(gameMap);
-
             
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
@@ -166,6 +195,8 @@ namespace LudumDare26
 
         public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Camera gameCamera)
         {
+            if (teleportScale < 0.02f) return;
+
             skeletonRenderer.Begin(gameCamera.CameraMatrix);
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
@@ -179,6 +210,8 @@ namespace LudumDare26
 
         public void MoveLeftRight(float dir)
         {
+            if (teleporting) return;
+
             if (grabbed)
             {
                 if ((int)dir != faceDir) oppositeDirPushed = true;
@@ -194,32 +227,37 @@ namespace LudumDare26
 
         public void UsePortal(Map gameMap)
         {
-            CheckForPortal(gameMap, Position);
-            CheckForPortal(gameMap, Position - new Vector2(0, gameMap.TileHeight));
-        }
+            if (teleporting) return;
 
-        void CheckForPortal(Map gameMap, Vector2 pos)
-        {
-            if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight] != null)
+            MapObjectLayer portalLayer = gameMap.GetLayer("Portals") as MapObjectLayer;
+
+            foreach (MapObject o in portalLayer.Objects)
             {
-                if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight].Properties.Contains("Portal"))
+                if (o.Location.Contains(Helper.VtoP(Position)))
                 {
-                    if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, (int)pos.Y / gameMap.TileHeight].Properties["Dir"] == "In")
+                    if (Convert.ToInt16(o.Properties["In"]) == Layer)
                     {
-                        Layer++;
+                        teleportingDir = -1;
+                        teleporting = true;
+                        teleportScale = 1f;
                         return;
                     }
-                    if ((gameMap.GetLayer(Layer.ToString()) as TileLayer).Tiles[(int)pos.X / gameMap.TileWidth, ((int)pos.Y / gameMap.TileHeight)].Properties["Dir"] == "Out")
+                    if (Convert.ToInt16(o.Properties["Out"]) == Layer)
                     {
-                        Layer--;
+                        teleportingDir = 1;
+                        teleporting = true;
+                        teleportScale = 1f;
                         return;
                     }
                 }
             }
         }
 
+       
+
         public void Jump()
         {
+            if (teleporting) return;
 
             if (grabbed && (Position - grabbedPosition).Length()<5f && !oppositeDirPushed)
             {
@@ -235,10 +273,10 @@ namespace LudumDare26
                 {
                     faceDir = -faceDir;
                     Speed.X = (faceDir) * 4f;
-                    Position.X += (faceDir * 30f);
+                    Position.X += (faceDir * 40f);
                     grabbed = false;
                     jumping = true;
-                    animTime = Animations["jump"].Duration *0.3f;
+                    animTime = Animations["jump"].Duration * 0.3f;
                 }
                 else
                 {
@@ -251,6 +289,8 @@ namespace LudumDare26
 
         public void Crouch()
         {
+            if (teleporting) return;
+
             if (grabbed)
             {
                 grabbed = false;
@@ -272,9 +312,9 @@ namespace LudumDare26
             if ((jumping || falling) && !justUngrabbed)
             {
                 if (Speed.X<0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top), Layer))
-                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top - 50), Layer) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top - 50), Layer) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + 50, collisionRect.Top), Layer))
+                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Left, collisionRect.Top - gameMap.TileHeight), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + gameMap.TileWidth, collisionRect.Top - gameMap.TileHeight), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Left + gameMap.TileWidth, collisionRect.Top), Layer))
                     {
                         grabbed = true;
                         jumping = false;
@@ -282,14 +322,14 @@ namespace LudumDare26
                         crouching = false;
                         Speed.Y = 0;
                         Speed.X = 0;
-                        grabbedPosition = new Vector2((int)(collisionRect.Left / gameMap.TileWidth) * gameMap.TileWidth, (int)(collisionRect.Top / gameMap.TileHeight) * gameMap.TileWidth) + new Vector2(50, 150);
+                        grabbedPosition = new Vector2((int)(collisionRect.Left / gameMap.TileWidth) * gameMap.TileWidth, (int)(collisionRect.Top / gameMap.TileHeight) * gameMap.TileHeight) + new Vector2(gameMap.TileWidth, collisionRect.Height + 30);
                         faceDir = -1;
                     }
 
                 if (Speed.X > 0 && gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top), Layer))
-                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top - 50), Layer) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top - 50), Layer) &&
-                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - 50, collisionRect.Top), Layer))
+                    if (!gameMap.CheckTileCollision(new Vector2(collisionRect.Right, collisionRect.Top - gameMap.TileHeight), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - gameMap.TileWidth, collisionRect.Top - gameMap.TileHeight), Layer) &&
+                       !gameMap.CheckTileCollision(new Vector2(collisionRect.Right - gameMap.TileWidth, collisionRect.Top), Layer))
                     {
                         grabbed = true;
                         jumping = false;
@@ -297,7 +337,7 @@ namespace LudumDare26
                         crouching = false;
                         Speed.Y = 0;
                         Speed.X = 0;
-                        grabbedPosition = new Vector2((int)(collisionRect.Right / gameMap.TileWidth) * gameMap.TileWidth, (int)(collisionRect.Top / gameMap.TileHeight) * gameMap.TileWidth) + new Vector2(0, 150);
+                        grabbedPosition = new Vector2((int)(collisionRect.Right / gameMap.TileWidth) * gameMap.TileWidth, (int)(collisionRect.Top / gameMap.TileHeight) * gameMap.TileHeight) + new Vector2(0, collisionRect.Height + 30);
                         faceDir = 1;
                     }
             }

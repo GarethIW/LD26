@@ -1,44 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="50" height="50" tilewidth="50" tileheight="50">
- <tileset firstgid="1" name="tile" tilewidth="50" tileheight="50">
-  <image source="tile.png" width="150" height="50"/>
-  <tile id="1">
+<map version="1.0" orientation="orthogonal" width="100" height="50" tilewidth="60" tileheight="60">
+ <tileset firstgid="1" name="tilesheet" tilewidth="60" tileheight="60">
+  <image source="tilesheet.png" width="600" height="1080"/>
+  <tile id="96">
    <properties>
     <property name="Dir" value="In"/>
     <property name="Portal" value="True"/>
    </properties>
   </tile>
-  <tile id="2">
+  <tile id="98">
    <properties>
     <property name="Dir" value="Out"/>
     <property name="Portal" value="True"/>
    </properties>
   </tile>
  </tileset>
- <layer name="2" width="50" height="50">
+ <layer name="2Decal1" width="100" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3SMQoAIAwDwKr//7Org1sHidxBoGMCrQIAAACAnvm6QMO4JE1q73XciRtuv5O2AQAAAOA3G1Zt+AcQJwAA
+   H4sIAAAAAAAAC+3OMQEAAAgDoHW1fwf/FfAQEpAAAAAAAG2uAwAAAAAAAAAAAAAAAAAAvLSoKdDRIE4AAA==
   </data>
  </layer>
- <layer name="1" width="50" height="50">
+ <layer name="2Decal" width="100" height="50">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3VsQoAIQgA0Or+/59bajROaDHeA2lRzEFsDQAAAOrrQQBnr+xL9f9v1ef41vt3jnGh103ZOxLdnqg2mw8AAABA3gTkJAdyECcAAA==
+   H4sIAAAAAAAAC+3VSWoCUAAEUe9u1Cg4RUGNUXAOaJxOaF3hwxcaUg9q1/tuNCRJkiRJkiRJ/0GTPqhFberQJ3WpV2GvMn0a0JBGNKYvmtC0wl5lZjSnBX3Tkn5oResKe5XZ0JZ2tKcDHelEvxX2KnOmC/3RlW50pwc9K+xVxj/P4p9n8c+z+OdZ/PMs/nkW/zyLf57FP8/in2fxz7P451n88yz+eRb/PIt/nsU/z+KfZ/HPs/jnWfzzLP55Fv88i3+exT/P4p9n8c+z+OdZ/PMs/nkW//y9XvhhP/EgTgAA
   </data>
  </layer>
- <layer name="0" width="50" height="50">
+ <layer name="2" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3OyQmAUABDQTt2F9wt3dTwQQ86A++SU6oKAAAAAOAZdWpSm7rUpyGNBfv08vcvmtOS1rSlPR3pLNivd68DAAAAAAAAAAAAAAAAwG/citRrPCBOAAA=
+  </data>
+ </layer>
+ <layer name="1Decal1" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3VIQpCQRQF0NmIVq1atWrVLYhr+WATbIJNsAku0RcmWX046pwDl5vm8tqUAgAAAAC82rU+AAAAfsS49QHwIftGb+GbHWoPCVuj4k9516n2MWFrEpkm7PTsUvucsDWLzBN2enarfU3YWkSWCTs9e9S+J2ytIuuEHXJsItvWRwAAAAAAAAAA/IknEVTukiBOAAA=
+  </data>
+ </layer>
+ <layer name="1Decal" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3W2UpDMRhF4b67s+AsOLQKjhUc2yd0PUBSEswxP2R9sO/ORci5WJnNJEmSJEmSJCmuLbbNdtgu22P77IAddjzXqI7YMTthp+yMnbMLdtnxXKO6Ytfsht2yOVuwO3bf8VyjemCP7Ik9sxf2ypbsreO5RvXOPtgn+2Lf7Iet2Drxvb2ZVu392ptp1d6vvZlW7f3am2nV3m9tb1TnL/frv2kv1fPSxvvWai/V89LG+9ZqL9Xz0sb71mov1fPSxvvWai/V5NJO2/P2ck22533kmmzP+8g12Z73kWuyPe8j12R73oc9j8Wex2LPY7HnsdjzWOx5LPY8Fnseiz2PxZ7HYs9jseex2PNY7Hks9jyWTU225/9vU5NH7/kv+zSARiBOAAA=
+  </data>
+ </layer>
+ <layer name="1" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3WsQ6CQBREUf4YRTERBP10pqEikmwoWOM5yW22etVmmgYAAAAAoF5tuqRr6tIt3VOfHife9a+eaUhjeqUpzemdPuedBT/J/1YX/xsA1G3dTt/2U8m7zXXc3nYqfbe5AAAAAAAAAAAAALYWxKVIuyBOAAA=
+  </data>
+ </layer>
+ <layer name="0Decal1" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3OIQ6EUBBEwX8RsGDB7lqw7BW4/yUYNXJth6QqebKTHgMAAAAAAAAAgH/u0BbeYKrm9AnaUq3pE7St2tMnaJ/qmz5BO6ozfYJ2Vb/0CQAAAAAAAAAA2gNOWhIVIE4AAA==
+  </data>
+ </layer>
+ <layer name="0Decal" width="100" height="50">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3VV0pEQRBG4WsW1DGAWTCOGzULZsE4A2bBPCv0QIPuoLvgng/Oa1Fvf1VJkiRJkiRJkiRJUj5d1E091Et91E8DNFjwr7oaomEaoQaN0hiN00TBv+pqkqZommZoluZonhYK/lVXi7REy7RCq7RGTVov91atvZd+QH82aJO2aJt2aJf2aD/jDSUHdEhHdEwndEpndJ7xhpILuqQruqYbuqUWtTPeUHJH9/RAj/REz/RCrxlvKHmr0p5/0Cd90Tf9UCfjDSXueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzueSzu+b9fqZQtgSBOAAA=
+  </data>
+ </layer>
+ <layer name="0" width="100" height="50">
   <properties>
    <property name="Collision" value="On"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3PMQoAIAwDwNb/P9oPOAgW4nAHXZukCgAAAICEThcYYsc/urI71tCfmx1TWafc1AEAAADwbgOLDa3TECcAAA==
+   H4sIAAAAAAAAC+3MyQmAQAAEwc3YW/A2dAfMYRGpgv52KQAAAAAAAAAA8G1NalOX+jSkMU1prvjgtaQ1bWlPRzrTle6KDwAAAAAAAAAAAIA/egCcsDhuIE4AAA==
   </data>
  </layer>
- <layer name="0Decal" width="50" height="50">
-  <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3BAQ0AAADCoPdPbQ43oAAAAAAAAAAAAODfAC7KO00QJwAA
-  </data>
- </layer>
- <objectgroup name="Spawn" width="50" height="50">
-  <object x="961" y="1242" width="79" height="109"/>
+ <objectgroup name="Spawn" width="100" height="50">
+  <object x="2038" y="1279" width="61" height="73"/>
+ </objectgroup>
+ <objectgroup name="Portals" width="100" height="50">
+  <object x="2163" y="1256" width="56" height="69">
+   <properties>
+    <property name="In" value="1"/>
+    <property name="Out" value="0"/>
+   </properties>
+  </object>
+  <object x="3056" y="1251" width="69" height="76">
+   <properties>
+    <property name="In" value="1"/>
+    <property name="Out" value="0"/>
+   </properties>
+  </object>
+  <object x="1796" y="720" width="71" height="77">
+   <properties>
+    <property name="In" value="2"/>
+    <property name="Out" value="1"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

@@ -27,6 +27,8 @@ namespace LudumDare26
 
         KeyboardState lks;
 
+        Texture2D blankTex;
+
         float[] LayerDepths;
         Color[] LayerColors;
 
@@ -63,6 +65,8 @@ namespace LudumDare26
 
             // TODO: use this.Content to load your game content here
             gameMap = Content.Load<Map>("map");
+
+            blankTex = Content.Load<Texture2D>("blank");
 
             int layerCount = 0;
             foreach (Layer ml in gameMap.Layers)
@@ -130,8 +134,8 @@ namespace LudumDare26
             for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
             {
                 LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * targetScale, 0.1f);
-                if (targetScale > 0f) targetScale -= 0.25f;
+                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * (1f-(targetScale*0.75f)), 0.1f);
+                if (targetScale > 0f) targetScale -= 0.333f;
             }
             if (gameHero.Layer > 0)
             {
@@ -139,11 +143,13 @@ namespace LudumDare26
                 for (int l = gameHero.Layer-1; l >=0; l--)
                 {
                     LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 1f, 0.1f);
+                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 0.98f, 0.1f);
                     else LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 0f, 0.1f);
                     targetScale += 0.5f;
                 }
             }
+
+            if (LayerDepths[gameHero.Layer] > 0.98f && LayerDepths[gameHero.Layer]<1.02f) gameHero.teleportFinished = true;
 
             lks = ks;
 
@@ -162,9 +168,17 @@ namespace LudumDare26
             for (int l = LayerDepths.Length-1; l >=0; l--)
             {
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]));
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, LayerColors[l]);
-                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, LayerColors[l]);
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l<gameHero.Layer?LayerColors[l]:Color.White);
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White);
+                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l < gameHero.Layer ? LayerColors[l] : Color.White);
                 spriteBatch.End();
+
+                if (l > gameHero.Layer)
+                {
+                    spriteBatch.Begin();
+                    spriteBatch.Draw(blankTex, GraphicsDevice.Viewport.Bounds, LayerColors[l]);
+                    spriteBatch.End();
+                }
 
                 if(l==gameHero.Layer)
                     gameHero.Draw(GraphicsDevice, spriteBatch, gameCamera);
