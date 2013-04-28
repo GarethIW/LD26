@@ -28,9 +28,11 @@ namespace LudumDare26
         WaterColumn[] columns = new WaterColumn[201];
         static Random rand = new Random();
 
-        public float Tension = 0.025f;
+        public float Tension = 0.0025f;
         public float Dampening = 0.025f;
-        public float Spread = 0.25f;
+        public float Spread = 0.05f;
+
+        public float Alpha = 1f;
 
         RenderTarget2D metaballTarget, particlesTarget;
         SpriteBatch spriteBatch;
@@ -90,7 +92,7 @@ namespace LudumDare26
             //alphaTest.Projection = Matrix.CreateTranslation(-0.5f, -0.5f, 0) *
             //    Matrix.CreateOrthographicOffCenter(0, view.Width, view.Height, 0, 0, 1);
 
-            columns = new WaterColumn[bounds.Width / 4];
+            columns = new WaterColumn[bounds.Width / 30];
 
             for (int i = 0; i < columns.Length; i++)
             {
@@ -171,12 +173,15 @@ namespace LudumDare26
                 rippleTime = 0;
                 rippleX += 10;
                 if (rippleX >= 500 || rippleX > bounds.Width) rippleX = 0;
-                for (int x = rippleX; x < bounds.Width; x += 500) Splash((float)x + bounds.X, 20f);
+                for (int x = rippleX; x < bounds.Width; x += 500) Splash((float)x + bounds.X, 10f);
             }
             //if (rippleX >= (gameMap.Width * gameMap.TileWidth)) rippleX -= (gameMap.Width * gameMap.TileWidth);
 
             for (int i = 0; i < columns.Length; i++)
+            {
                 columns[i].Update(Dampening, Tension);
+                columns[i].TargetHeight = bounds.Height;
+            }
 
 
 
@@ -273,7 +278,7 @@ namespace LudumDare26
             //spriteBatch.End();
 
             // draw the waves
-            pb.Begin(PrimitiveType.TriangleList, gameCamera.CameraMatrix * Matrix.CreateScale(Scale));
+            pb.Begin(PrimitiveType.TriangleList, gameCamera.CameraMatrix * Matrix.CreateScale(Scale) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * Scale), 0f)));
             Color midnightBlue = new Color(0, 0, 0);// *0.9f;
             lightBlue *= 0.8f;
 
@@ -286,13 +291,13 @@ namespace LudumDare26
                 Vector2 p3 = new Vector2(p2.X, bottom);
                 Vector2 p4 = new Vector2(p1.X, bottom);
 
-                pb.AddVertex(p1, topColor);
-                pb.AddVertex(p2, topColor);
-                pb.AddVertex(p3, bottomColor);
+                pb.AddVertex(p1, topColor*Alpha);
+                pb.AddVertex(p2, topColor * Alpha);
+                pb.AddVertex(p3, bottomColor * Alpha);
 
-                pb.AddVertex(p1, topColor);
-                pb.AddVertex(p3, bottomColor);
-                pb.AddVertex(p4, bottomColor);
+                pb.AddVertex(p1, topColor * Alpha);
+                pb.AddVertex(p3, bottomColor * Alpha);
+                pb.AddVertex(p4, bottomColor * Alpha);
             }
 
             pb.End();

@@ -47,6 +47,22 @@ namespace TiledContentPipeline
 					"TextureImporter",
 					asset);
 
+                string whitefn = Path.GetFileNameWithoutExtension(tileSet.Image);
+                string ext = Path.GetExtension(tileSet.Image);
+
+                tileSet.Image = whitefn + "-white" + ext;
+
+                path = string.IsNullOrEmpty(TileSetDirectory) ? tileSet.Image : Path.Combine(TileSetDirectory, tileSet.Image);
+                asset = path.Remove(path.LastIndexOf('.'));
+                path = Path.Combine(Directory.GetCurrentDirectory(), path);
+
+                tileSet.WhiteTexture = context.BuildAsset<TextureContent, TextureContent>(
+                    new ExternalReference<TextureContent>(path),
+                    "TextureProcessor",
+                    data,
+                    "TextureImporter",
+                    asset);
+
 				// load the image so we can compute the individual tile source rectangles
 				int imageWidth = 0;
 				int imageHeight = 0;

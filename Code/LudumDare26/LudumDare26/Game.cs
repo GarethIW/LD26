@@ -18,6 +18,8 @@ namespace LudumDare26
     /// </summary>
     public class LudumDareGame : Microsoft.Xna.Framework.Game
     {
+        static Random rand = new Random();
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
@@ -28,15 +30,21 @@ namespace LudumDare26
         KeyboardState lks;
 
         Texture2D blankTex;
+        Texture2D skyGradient;
+        Texture2D cloudTexture;
+
 
         List<Water> Waters = new List<Water>();
+
+        List<Vector4> Clouds = new List<Vector4>();
 
         float[] LayerDepths;
         Color[] LayerColors;
 
-        DepthStencilState dss;
-        DepthStencilState dss2;
-        AlphaTestEffect ate; 
+        double waterRiseTime;
+        int waterLevel = 200;
+
+        bool emptying = false;
 
         public LudumDareGame()
         {
@@ -73,6 +81,8 @@ namespace LudumDare26
             gameMap = Content.Load<Map>("map");
 
             blankTex = Content.Load<Texture2D>("blank");
+            skyGradient = Content.Load<Texture2D>("sky-gradient");
+            cloudTexture = Content.Load<Texture2D>("cloud-test");
 
             int layerCount = 0;
             foreach (Layer ml in gameMap.Layers)
@@ -84,7 +94,7 @@ namespace LudumDare26
             for (int i = 0; i < LayerDepths.Length; i++)
             {
                 LayerDepths[i] = scale;
-                LayerColors[i] = Color.White * (scale * 0.5f);
+                LayerColors[i] = new Color(scale * 0.5f, scale * 0.5f, scale * 0.5f);//Color.White * (scale * 0.5f);
                 if (scale > 0f) scale -= 0.25f;
             }
 
@@ -95,35 +105,17 @@ namespace LudumDare26
             gameCamera.Position = gameHero.Position;
             gameCamera.Target = gameHero.Position;
 
-            for (scale = 1.25f; scale > 0.5f; scale -= 0.1f)
+            for (scale = 1.5f; scale > -5f; scale -= 0.1f)
             {
-                Waters.Add(new Water(GraphicsDevice, gameMap, new Rectangle(0, (gameMap.Height * gameMap.TileHeight) - 200, gameMap.Width * gameMap.TileWidth, 600), new Color(50, 128, 255), Color.Black, scale));
+                Waters.Add(new Water(GraphicsDevice, gameMap, new Rectangle(-GraphicsDevice.Viewport.Bounds.Width, (gameMap.Height * gameMap.TileHeight) - waterLevel, ((gameMap.Width * gameMap.TileWidth) * 2) + GraphicsDevice.Viewport.Bounds.Width, 400 + waterLevel), new Color(50, 128, 255), Color.Black, scale));
+                
             }
 
-            ate = new AlphaTestEffect(GraphicsDevice);
-            ate.AlphaFunction = CompareFunction.Greater;
-            ate.ReferenceAlpha = 0;
-            ate.DiffuseColor = new Vector3(0.5f, 0.5f, 0.5f);
-            Matrix projection = Matrix.CreateOrthographicOffCenter(0,
-                1280,
-                720,
-                0, 0, 1);
-            Matrix halfPixelOffset = Matrix.CreateTranslation(-0.5f, -0.5f, 0);
-            ate.Projection = halfPixelOffset * projection;
-
-            dss = new DepthStencilState();
-            dss.StencilEnable = true;
-            dss.StencilFunction = CompareFunction.Always;
-            dss.StencilPass = StencilOperation.Replace;
-            dss.ReferenceStencil = 1;
-            dss.DepthBufferEnable = true;
-
-            dss2 = new DepthStencilState();
-            dss2.StencilPass = StencilOperation.Zero;
-            dss2.StencilEnable = true;
-            dss2.DepthBufferEnable = true;
-            dss2.StencilFunction = CompareFunction.Equal;
-            dss2.ReferenceStencil = 1;
+            for (scale = 1.5f; scale > -5f; scale -= 0.1f)
+            {
+                Clouds.Add(new Vector4(rand.Next(1920), 1000f, scale, 0f));
+            }
+            
         }
 
         /// <summary>
@@ -169,8 +161,9 @@ namespace LudumDare26
             for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
             {
                 LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * (targetScale * 0.5f), 0.1f);
+                LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f)) * 0.9f), 0.1f); //* (targetScale * 0.5f)
                 if (targetScale > 0f) targetScale -= 0.333f;
+                else LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - targetScale) * 0.4f, (1f - targetScale) * 0.5f, (1f - targetScale) * 0.9f) * 0f, 0.1f);
             }
             if (gameHero.Layer > 0)
             {
@@ -178,8 +171,9 @@ namespace LudumDare26
                 for (int l = gameHero.Layer-1; l >=0; l--)
                 {
                     LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 0.98f, 0.1f);
-                    else LayerColors[l] = Color.Lerp(LayerColors[l], Color.Black * 0f, 0.1f);
+                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0.98f, 0.1f);
+                    else if (gameHero.Layer == l) LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * 1f, 0.1f);
+                    else LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0f, 0.1f);
                     targetScale += 0.5f;
                 }
             }
@@ -188,8 +182,66 @@ namespace LudumDare26
 
             lks = ks;
 
-            foreach (Water w in Waters)
-                w.Update(gameTime);
+            waterRiseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (waterRiseTime >= 100)
+            {
+                waterRiseTime = 0;
+
+                waterLevel ++;
+
+                foreach (Water w in Waters)
+                {
+                    w.bounds.Offset(new Point(0, -1));
+                    w.bounds.Height++;
+                }
+            }
+
+            if ((gameMap.Height * gameMap.TileHeight) - waterLevel < gameHero.Position.Y - 200f)
+                emptying = true;
+
+            if (emptying)
+            {
+                waterLevel--;
+                foreach (Water w in Waters)
+                {
+                    w.bounds.Offset(new Point(0, 1));
+                    w.bounds.Height--;
+                }
+                if (waterLevel < 200) emptying = false;
+            }
+
+            float startScale = 1.5f;
+            foreach (Water w in Waters.OrderByDescending(wat => wat.Scale))
+            {
+                w.Scale = MathHelper.Lerp(w.Scale, startScale + (gameHero.Layer * 0.25f), 0.1f);
+
+                if (w.Scale > 0.25f) w.Alpha = MathHelper.Lerp(w.Alpha, w.Scale, 0.1f);
+                else w.Alpha = MathHelper.Lerp(w.Alpha, 0f, 0.1f);
+
+                if(w.Scale>0f) w.Update(gameTime);
+                startScale -= 0.1f;
+            }
+
+            startScale = 1.5f;
+            for(int c = 0; c<Clouds.Count;c++)
+            {
+                Vector4 cl = Clouds[c];
+                cl.Z = MathHelper.Lerp(cl.Z, startScale + (gameHero.Layer * 0.25f), 0.01f);
+                cl.Y = (((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) - ((((float)GraphicsDevice.Viewport.Height/2) / (float)(gameMap.Height * gameMap.TileHeight)) * (gameHero.Position.Y*3)))  +100*cl.Z;
+                //cl.Y = ((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) * -(cl.Z * 1.5f);
+                cl.X -= 0.1f;
+                if (cl.X <= -cloudTexture.Width) cl.X = 0;
+
+                if (cl.Z > 0.5f) cl.W = MathHelper.Lerp(cl.W, 1f, 0.01f);
+                else if (cl.Z > 0f) cl.W = MathHelper.Lerp(cl.W, cl.Z, 0.01f);
+                else cl.W = MathHelper.Lerp(cl.W, 0f, 0.01f);
+
+                Clouds[c] = cl;
+                startScale -= 0.1f;
+            }
+
+
+            
 
             base.Update(gameTime);
         }
@@ -202,23 +254,34 @@ namespace LudumDare26
         {
             GraphicsDevice.Clear(Color.Black);
 
-            
+            spriteBatch.Begin();
+            spriteBatch.Draw(skyGradient, GraphicsDevice.Viewport.Bounds, Color.White);
+            spriteBatch.End();
 
             // TODO: Add your drawing code here
             for (int l = LayerDepths.Length-1; l >=0; l--)
             {
                 foreach (Water w in Waters.OrderBy(wat => wat.Scale))
-                    if (w.Scale < LayerDepths[l])
+                    if (w.Scale < LayerDepths[l] && w.Scale>0.25f)
                     {
                         if (l == LayerDepths.Length - 1) w.Draw(gameCamera);
                         else if (w.Scale >= LayerDepths[l + 1]) w.Draw(gameCamera);
                     }
 
 
+                
+                foreach (Vector4 cloud in Clouds.OrderBy(cl => cl.Z))
+                    if (cloud.Z < LayerDepths[l] && cloud.Z>0f && cloud.Z<1f)
+                    {
+                        if (l == LayerDepths.Length - 1) DrawCloud(spriteBatch, cloud);
+                        else if (cloud.Z >= LayerDepths[l + 1]) DrawCloud(spriteBatch, cloud);
+                    }
+               
+
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
-                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White);
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
+                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
+                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
                 spriteBatch.End();
 
                 
@@ -241,9 +304,23 @@ namespace LudumDare26
             }
 
             foreach (Water w in Waters.OrderBy(wat => wat.Scale))
-                if (w.Scale >= LayerDepths[0]) w.Draw(gameCamera);
+                if (w.Scale >= LayerDepths[0] && w.Scale<1.6f && w.Scale>0f) w.Draw(gameCamera);
+
+            foreach (Vector4 cloud in Clouds.OrderBy(cl => cl.Z))
+                if (cloud.Z >= LayerDepths[0] && cloud.Z < 1f && cloud.Z>0f) DrawCloud(spriteBatch, cloud);
+                  
 
             base.Draw(gameTime);
+        }
+
+        void DrawCloud(SpriteBatch sb, Vector4 cloud)
+        {
+            sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(cloud.Z) * Matrix.CreateTranslation(new Vector3(0f, MathHelper.Clamp(100f/cloud.Z,0f,200f), 0f)));
+            for (int x = -cloudTexture.Width; x < (gameMap.Width * gameMap.TileWidth) + cloudTexture.Width; x += (int)((float)cloudTexture.Width))
+            {
+                 sb.Draw(cloudTexture, new Vector2((x + cloud.X)/cloud.Z , MathHelper.Clamp(cloud.Y, 0, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 1);
+            }
+            sb.End();
         }
     }
 }

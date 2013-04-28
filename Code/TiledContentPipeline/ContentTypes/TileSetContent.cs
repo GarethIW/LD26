@@ -26,6 +26,7 @@ namespace TiledContentPipeline
 		public string Image;
 		public Color? ColorKey;
 		public ExternalReference<TextureContent> Texture;
+        public ExternalReference<TextureContent> WhiteTexture;
 		public List<Tile> Tiles = new List<Tile>();
 		public Dictionary<int, List<Property>> TileProperties = new Dictionary<int, List<Property>>();
 

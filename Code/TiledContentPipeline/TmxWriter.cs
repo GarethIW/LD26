@@ -36,6 +36,8 @@ namespace TiledContentPipeline
 				// write out the texture used by the tiles
 				output.WriteExternalReference(tileSet.Texture);
 
+                output.WriteExternalReference(tileSet.WhiteTexture);
+
 				// write out all the tiles in the tile set
 				output.Write(tileSet.Tiles.Count);
 				foreach (var tile in tileSet.Tiles)

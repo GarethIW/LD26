@@ -87,6 +87,7 @@ namespace TiledLib
                 bool collisionSet = reader.ReadBoolean();
 
 				Texture2D texture = reader.ReadExternalReference<Texture2D>();
+                Texture2D whiteTexture = reader.ReadExternalReference<Texture2D>();
 
                 // Read in color data for collision purposes
                 // You'll probably want to limit this to just the tilesets that are used for collision
@@ -112,7 +113,7 @@ namespace TiledLib
 					PropertyCollection props = new PropertyCollection();
 					props.Read(reader);
 
-					Tile t = new Tile(texture, source, props, collisionBitData);
+					Tile t = new Tile(texture, whiteTexture, source, props, collisionBitData);
 					while (id >= tiles.Count)
 					{
 						tiles.Add(null);
@@ -200,7 +201,7 @@ namespace TiledLib
                 if (!l.Visible)
                     continue;
 
-                DrawLayer(spriteBatch, l, gameCamera, Vector2.Zero, 1.0f, Color.White * l.Opacity);
+                //DrawLayer(spriteBatch, l, gameCamera, Vector2.Zero, 1.0f, Color.White * l.Opacity, false);
             }
         }
 
@@ -246,25 +247,25 @@ namespace TiledLib
         /// <param name="spriteBatch">The SpriteBatch to use to render the layer.</param>
         /// <param name="layerName">The name of the layer to draw.</param>
         /// <param name="gameCamera">The camera to use for positioning.</param>
-        public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera)
-        {
-            var l = GetLayer(layerName);
+        //public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera)
+        //{
+        //    var l = GetLayer(layerName);
 
-            if (l == null)
-                return;
+        //    if (l == null)
+        //        return;
 
-            if (!l.Visible)
-                return;
+        //    if (!l.Visible)
+        //        return;
 
-            TileLayer tileLayer = l as TileLayer;
-			if (tileLayer != null)
-			{
-                if (tileLayer.Properties.Contains("Shadows"))
-                    DrawLayer(spriteBatch, tileLayer.Name, gameCamera, new Vector2(-10f, -10f), 0.2f);
+        //    TileLayer tileLayer = l as TileLayer;
+        //    if (tileLayer != null)
+        //    {
+        //        if (tileLayer.Properties.Contains("Shadows"))
+        //            DrawLayer(spriteBatch, tileLayer.Name, gameCamera, new Vector2(-10f, -10f), 0.2f);
 
-                DrawLayer(spriteBatch, l, gameCamera, new Vector2(0,0), tileLayer.Opacity, Color.White);
-            }
-        }
+        //        DrawLayer(spriteBatch, l, gameCamera, new Vector2(0,0), tileLayer.Opacity, Color.White, false);
+        //    }
+        //}
 
 
 
@@ -274,7 +275,7 @@ namespace TiledLib
         /// <param name="spriteBatch">The SpriteBatch to use to render the layer.</param>
         /// <param name="layerName">The name of the layer to draw.</param>
         /// <param name="gameCamera">The camera to use for positioning.</param>
-        public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera, Color color)
+        public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera, Color color, bool silhouette, float scale)
         {
             var l = GetLayer(layerName);
 
@@ -287,10 +288,9 @@ namespace TiledLib
             TileLayer tileLayer = l as TileLayer;
             if (tileLayer != null)
             {
-                if(tileLayer.Properties.Contains("Shadows"))
-                    DrawLayer(spriteBatch, tileLayer.Name, gameCamera, new Vector2(-10f, -10f), 0.2f);
+                
 
-                DrawLayer(spriteBatch, l, gameCamera, new Vector2(0, 0), tileLayer.Opacity, color);
+                DrawLayer(spriteBatch, l, gameCamera, color, silhouette, scale);
             }
         }
 
@@ -302,29 +302,29 @@ namespace TiledLib
         /// <param name="gameCamera">The camera to use for positioning.</param>
         /// <param name="shadowOffset">Pixel amount to offset the shadowing by.</param>
         /// <param name="alpha">Shadow opacity</param>
-        public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera, Vector2 shadowOffset, float alpha)
-        {
-            var l = GetLayer(layerName);
+        //public void DrawLayer(SpriteBatch spriteBatch, string layerName, Camera gameCamera, Vector2 shadowOffset, float alpha)
+        //{
+        //    var l = GetLayer(layerName);
 
-            if (l == null)
-                return;
+        //    if (l == null)
+        //        return;
 
-            if (!l.Visible)
-                return;
+        //    if (!l.Visible)
+        //        return;
 
-            TileLayer tileLayer = l as TileLayer;
-			if (tileLayer != null)
-			{
-                //for (float mult = 0f; mult < 1f; mult += 0.1f)
-                //{
-                    DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha, Color.Black);
-                //DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha, Color.Black);
-                //}
-                //DrawLayer(spriteBatch, l, gameCamera, shadowOffset * 0.5f, alpha * 0.75f, Color.Black);
-                //DrawLayer(spriteBatch, l, gameCamera, shadowOffset * 0.75f, alpha * 0.5f, Color.Black);
-                //DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha *0.25f, Color.Black);
-            }
-        }
+        //    TileLayer tileLayer = l as TileLayer;
+        //    if (tileLayer != null)
+        //    {
+        //        //for (float mult = 0f; mult < 1f; mult += 0.1f)
+        //        //{
+        //        DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha, Color.Black, false);
+        //        //DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha, Color.Black);
+        //        //}
+        //        //DrawLayer(spriteBatch, l, gameCamera, shadowOffset * 0.5f, alpha * 0.75f, Color.Black);
+        //        //DrawLayer(spriteBatch, l, gameCamera, shadowOffset * 0.75f, alpha * 0.5f, Color.Black);
+        //        //DrawLayer(spriteBatch, l, gameCamera, shadowOffset, alpha *0.25f, Color.Black);
+        //    }
+        //}
 
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace TiledLib
         /// <param name="offset">A pixel amount to offset the tile positioning by</param>
         /// <param name="alpha">Layer opacity.</param>
         /// <param name="color">The color to use when drawing.</param>
-        public void DrawLayer(SpriteBatch spriteBatch, Layer layer, Camera gameCamera, Vector2 offset, float alpha, Color color)
+        public void DrawLayer(SpriteBatch spriteBatch, Layer layer, Camera gameCamera, Color color, bool silhouette, float scale)
         {
             if (!layer.Visible)
                 return;
@@ -344,7 +344,7 @@ namespace TiledLib
             TileLayer tileLayer = layer as TileLayer;
             if (tileLayer != null)
             {
-                Rectangle worldArea = new Rectangle((int)gameCamera.Position.X - (gameCamera.Width), (int)gameCamera.Position.Y - (int)(gameCamera.Height*1.5), gameCamera.Width *2, gameCamera.Height*3);
+                Rectangle worldArea = new Rectangle((int)gameCamera.Position.X - (int)((float)gameCamera.Width / scale), (int)gameCamera.Position.Y - (int)(((float)gameCamera.Height*1.5) / scale), (int)((gameCamera.Width * 2)/scale), (int)((gameCamera.Height*3)/scale));
 
                 // figure out the min and max tile indices to draw
                 int minX = Math.Max((int)Math.Floor((float)worldArea.Left / TileWidth), 0);
@@ -368,7 +368,7 @@ namespace TiledLib
                             Rectangle r = new Rectangle(x * TileWidth, y * TileHeight, tile.Source.Width, tile.Source.Height);
 
 
-                            spriteBatch.Draw(tile.Texture, r, tile.Source, color);
+                        spriteBatch.Draw(!silhouette ? tile.Texture : tile.WhiteTexture, r, tile.Source, color);
                         //}
 
                     }

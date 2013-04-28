@@ -161,7 +161,7 @@ namespace LudumDare26
                 teleportScale = MathHelper.Lerp(teleportScale, 0f, 0.1f);
                 if (teleportScale < 0.02f)
                 {
-                    Layer += teleportingDir;
+                    Layer = teleportingDir;
                     teleporting = false;
                     teleportFinished = false;
                 }
@@ -237,14 +237,14 @@ namespace LudumDare26
                 {
                     if (Convert.ToInt16(o.Properties["In"]) == Layer)
                     {
-                        teleportingDir = -1;
+                        teleportingDir = Convert.ToInt16(o.Properties["Out"]);
                         teleporting = true;
                         teleportScale = 1f;
                         return;
                     }
                     if (Convert.ToInt16(o.Properties["Out"]) == Layer)
                     {
-                        teleportingDir = 1;
+                        teleportingDir = Convert.ToInt16(o.Properties["In"]);
                         teleporting = true;
                         teleportScale = 1f;
                         return;

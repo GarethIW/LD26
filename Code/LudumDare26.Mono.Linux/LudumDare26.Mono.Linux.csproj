@@ -135,6 +135,10 @@
       <Link>Content\spinegirl.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet-white.png">
+      <Link>Content\tilesheet-white.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
       <Link>Content\tilesheet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -172,6 +176,16 @@
     </Content>
     <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.json">
       <Link>Content\spinegirl.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\Cloud-Test.xnb">
+      <Link>Content\Cloud-Test.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sky-gradient.xnb">
+      <Link>Content\sky-gradient.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

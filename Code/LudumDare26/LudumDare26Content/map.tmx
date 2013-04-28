@@ -15,9 +15,24 @@
    </properties>
   </tile>
  </tileset>
+ <layer name="3Decal1" width="100" height="58">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3BAQEAAACCIP+vbkhAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAPBkE54ZaqBaAAA=
+  </data>
+ </layer>
+ <layer name="3Decal" width="100" height="58">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3V2UoCUBiFUd+9tAy0tMAcChocwKHhCdtv0OX54awF3/2+24MBAAAAAAAAAAAAAAAAAAAAwP+u0nUaplG6SbdpnO4a7urVJE3TfXpIszRPj+mp4a5eLdJzWqZVWqdNekmvDXf16i29p4/0mbZpl/bp0HBXr47plM7pkr7Sd/pJvw139cqf1+LPa/HntfjzWvx5Lf68Fn9eiz+vxZ/X4s9r8ee19PznfwPnsf2gWgAA
+  </data>
+ </layer>
+ <layer name="3" width="100" height="58">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAC+3RyQmAUABDwd+xu+Bu6aYDjyrOwLsHUgoAAAAAAAAAAAAAAAAAAMB/VKlOTWpTl/o0pPHBXX81pTktaU1b2tORzuKvt7n7CwAAAAAAgO+4ACNAfP+gWgAA
+  </data>
+ </layer>
  <layer name="2Decal1" width="100" height="58">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3OMQ0AAAgDsHnFvwfeGSA8rYImAAAAAAAAAAAAAAAAAADAtfkOAAAAAAAAAEBZ49G2o6BaAAA=
+   H4sIAAAAAAAAC+3LoQ0AAAgDsGn+P5gXJkgwrW8CAAAAAAAAAAAAAAAAAAA05ukCAAAAAAAAwLUFJxgLd6BaAAA=
   </data>
  </layer>
  <layer name="2Decal" width="100" height="58">
@@ -32,7 +47,7 @@
  </layer>
  <layer name="1Decal1" width="100" height="58">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3VMQ5BQRQF0NkILS0tLS1bEGv5iU6ik+gkOoklesXswGMw5yQ3t5qb100pAAAAAAAAAAAAAAAAAADAu+1aHwAAAD9i3PoA+JB9o7fwzQ61h4StUfGnvOpU+5iwNYlME3Z6dql9TtiaReYJOz271b4mbC0iy4Sdnj1q3xO2VpF1wg45NpFt6yMA/twTuONHkqBaAAA=
+   H4sIAAAAAAAAC+3VoQpCQRAF0M1mq1atvqpVq/6UYBNeE2yCTfATnbAfIDi44p4Dl5vmsm1LAQAAAAAAAAAAAAAAAAAA3jFtdAsAAD2Zt34AfMmk0S38slPtY8LWrPhTPjXWPidsLSLLhJ2eXWtfErZWkSFhp2f32reErXVkk7DTs2ftR8LWNrJL2CHHPnJo/QiAP/cC1KLc4aBaAAA=
   </data>
  </layer>
  <layer name="1Decal" width="100" height="58">
@@ -47,7 +62,7 @@
  </layer>
  <layer name="0Decal1" width="100" height="58">
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3OoQ2AUBBEwd8IWLBgPxYstED/TXDqLI4LyUzy5CbbGgAAAAAAAAAAAAAAAAAAAAAAAF+6i7bwB0M0Vp8gTdFcfYK0RGv1CVKPtuoTpD06qk+QzuiqPgHAqwceqkgQoFoAAA==
+   H4sIAAAAAAAAC+3OIQ6AQBAEwXsEFixYzoIFC/9/DavW4tiQVCUtJ5nWAAAAAAAAAAAAAAAAAAAAAAAA+NJQtIU/GKOp+gRpjpbqE6Q16tUnSFu0V58gHdFZfYJ0RXf1CQBePXQYhf2gWgAA
   </data>
  </layer>
  <layer name="0Decal" width="100" height="58">
@@ -60,7 +75,7 @@
    <property name="Collision" value="On"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3MSQqAMAAEwfzYXXD36Q74h1xSBX3tUgAAAAAAAAAAAAAAAAAAAAAAAKAtXerTkMY0pTktaa344LelPR3pTFe605Peig8AAICWfPiHONigWgAA
+   H4sIAAAAAAAAC+3NSQqEABAEQX/sLrjOPN16goLLwQjIW1NdFAAAAAAAAAAAAAAAAAAAAAAAAPAtZapSnZrUpi71abhw48yfo7d3bL5tTFOa05LWtKVf+l+4cebP0ds7NgEAAJ6wAxZceZigWgAA
   </data>
  </layer>
  <objectgroup name="Spawn" width="100" height="58">
@@ -88,6 +103,12 @@
   <object x="903" y="2279" width="58" height="64">
    <properties>
     <property name="In" value="2"/>
+    <property name="Out" value="1"/>
+   </properties>
+  </object>
+  <object x="2033" y="2258" width="73" height="94">
+   <properties>
+    <property name="In" value="3"/>
     <property name="Out" value="1"/>
    </properties>
   </object>

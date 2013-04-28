@@ -119,12 +119,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
-      <Link>Content\tilesheet.png</Link>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.png">
+      <Link>Content\spinegirl.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.png">
-      <Link>Content\spineboy.png</Link>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet-white.png">
+      <Link>Content\tilesheet-white.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet.png">
+      <Link>Content\tilesheet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Icon.ico" />
@@ -136,20 +140,28 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.atlas">
+      <Link>Content\spinegirl.atlas</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.json">
+      <Link>Content\spinegirl.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\blank.xnb">
       <Link>Content\blank.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\Cloud-Test.xnb">
+      <Link>Content\Cloud-Test.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\map.xnb">
       <Link>Content\map.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.atlas">
-      <Link>Content\spineboy.atlas</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\spineboy.json">
-      <Link>Content\spineboy.json</Link>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sky-gradient.xnb">
+      <Link>Content\sky-gradient.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

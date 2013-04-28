@@ -12,13 +12,15 @@ namespace TiledLib
 	public class Tile
 	{
 		public Texture2D Texture { get; private set; }
+        public Texture2D WhiteTexture { get; private set; }
 		public Rectangle Source { get; private set; }
 		public PropertyCollection Properties { get; private set; }
         public bool[] CollisionData { get; private set; }
 
-		internal Tile(Texture2D texture, Rectangle source, PropertyCollection properties, bool[] collision)
+		internal Tile(Texture2D texture, Texture2D whiteTexture, Rectangle source, PropertyCollection properties, bool[] collision)
 		{
 			Texture = texture;
+            WhiteTexture = whiteTexture;
 			Source = source;
 			Properties = properties;
             CollisionData = collision;

@@ -48,6 +48,16 @@
       <Importer>TmxImporter</Importer>
       <Processor>TmxProcessor</Processor>
     </Compile>
+    <Compile Include="sky-gradient.jpg">
+      <Name>sky-gradient</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="Cloud-Test.png">
+      <Name>Cloud-Test</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
     <Content Include="spineboy.atlas">
       <Name>spineboy</Name>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
