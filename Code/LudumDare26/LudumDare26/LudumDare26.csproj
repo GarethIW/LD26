@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cloud.cs" />
+    <Compile Include="PromptController.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Hero.cs" />
     <Compile Include="PrimitiveBatch.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Spine\Slot.cs" />
     <Compile Include="Spine\SlotData.cs" />
     <Compile Include="Spine\SpriteBatcher.cs" />
+    <Compile Include="TriggerController.cs" />
     <Compile Include="Water.cs" />
   </ItemGroup>
   <ItemGroup>

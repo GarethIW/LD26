@@ -26,6 +26,8 @@ namespace LudumDare26
         Map gameMap;
         Camera gameCamera;
         Hero gameHero;
+        TriggerController gameTriggerController;
+        PromptController gamePromptController;
 
         KeyboardState lks;
 
@@ -80,6 +82,10 @@ namespace LudumDare26
             // TODO: use this.Content to load your game content here
             gameMap = Content.Load<Map>("map");
 
+            gameTriggerController = new TriggerController(gameMap);
+            gamePromptController = new PromptController();
+            gamePromptController.LoadContent(Content);
+
             blankTex = Content.Load<Texture2D>("blank");
             skyGradient = Content.Load<Texture2D>("sky-gradient");
             cloudTexture = Content.Load<Texture2D>("cloud-test");
@@ -94,8 +100,8 @@ namespace LudumDare26
             for (int i = 0; i < LayerDepths.Length; i++)
             {
                 LayerDepths[i] = scale;
-                LayerColors[i] = new Color(scale * 0.5f, scale * 0.5f, scale * 0.5f);//Color.White * (scale * 0.5f);
-                if (scale > 0f) scale -= 0.25f;
+                LayerColors[i] = new Color((1f - (scale * 0.5f)) * 0.4f, (1f - (scale * 0.5f)) * 0.5f, (1f - (scale * 0.5f)) * 0.9f);//Color.White * (scale * 0.5f);
+                if (scale > 0f) scale -= 0.33333f;
             }
 
             gameHero = new Hero(Helper.PtoV((gameMap.GetLayer("Spawn") as MapObjectLayer).Objects[0].Location.Center));
@@ -155,6 +161,8 @@ namespace LudumDare26
             gameCamera.Target = gameHero.Position;
             gameCamera.Update(GraphicsDevice.Viewport.Bounds);
 
+            gameTriggerController.Update(gameTime, gameHero);
+            gamePromptController.Update(gameTime);
 
             // Scale layers according to player's layer
             float targetScale = 1f;
@@ -171,7 +179,7 @@ namespace LudumDare26
                 for (int l = gameHero.Layer-1; l >=0; l--)
                 {
                     LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0.98f, 0.1f);
+                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0.85f, 0.1f);
                     else if (gameHero.Layer == l) LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * 1f, 0.1f);
                     else LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0f, 0.1f);
                     targetScale += 0.5f;
@@ -183,16 +191,19 @@ namespace LudumDare26
             lks = ks;
 
             waterRiseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (waterRiseTime >= 100)
+            if (waterRiseTime >= 50)
             {
                 waterRiseTime = 0;
 
-                waterLevel ++;
-
-                foreach (Water w in Waters)
+                if (TriggerController.Instance.WaterTriggered)
                 {
-                    w.bounds.Offset(new Point(0, -1));
-                    w.bounds.Height++;
+                    waterLevel++;
+
+                    foreach (Water w in Waters)
+                    {
+                        w.bounds.Offset(new Point(0, -1));
+                        w.bounds.Height++;
+                    }
                 }
             }
 
@@ -308,7 +319,10 @@ namespace LudumDare26
 
             foreach (Vector4 cloud in Clouds.OrderBy(cl => cl.Z))
                 if (cloud.Z >= LayerDepths[0] && cloud.Z < 1f && cloud.Z>0f) DrawCloud(spriteBatch, cloud);
-                  
+
+            spriteBatch.Begin();
+            gamePromptController.Draw(GraphicsDevice, spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

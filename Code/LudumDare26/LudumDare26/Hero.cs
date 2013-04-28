@@ -112,7 +112,7 @@ namespace LudumDare26
             if (crouching && !jumping)
             {
                 collisionRect.Width = 100;
-                collisionRect.Height = 96;
+                collisionRect.Height = 110;
 
                 if (!walking)
                 {
@@ -179,7 +179,9 @@ namespace LudumDare26
             Position += Speed;
             collisionRect.Location = new Point((int)Position.X - (collisionRect.Width / 2), (int)Position.Y - (collisionRect.Height));
             CheckCollision(gameMap);
-            
+
+            Position.X = MathHelper.Clamp(Position.X, 0, gameMap.Width * gameMap.TileWidth);
+
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
     
