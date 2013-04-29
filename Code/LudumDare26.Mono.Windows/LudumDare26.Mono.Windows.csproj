@@ -140,6 +140,14 @@
       <Link>Content\tilesheet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet2-white.png">
+      <Link>Content\tilesheet2-white.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet2.png">
+      <Link>Content\tilesheet2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +218,12 @@
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\use.xnb">
       <Link>Content\promptimages\use.xnb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\valve.xnb">
+      <Link>Content\valve.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

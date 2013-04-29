@@ -16,7 +16,7 @@ namespace LudumDare26
         public Vector2 Position;
         public Vector2 Speed;
 
-        public int Layer = 2;
+        public int Layer = 0;
 
         public float Scale = 0.6f;
 
@@ -252,7 +252,7 @@ namespace LudumDare26
                 {
                     respawning = true;
 
-                    if ((Position - checkPointPosition).Length() < 50f)
+                    if ((Position - checkPointPosition).Length() < 50f || drownTime >=5000)
                     {
                         // checkpoint is underwater, game over!
                         Dead = true;
@@ -263,6 +263,9 @@ namespace LudumDare26
 
             if (respawning)
             {
+                climbing = false;
+                grabbed = false;
+
                 if ((Position - checkPointPosition).Length() > 1f)
                 {
                     teleportScale = 0f;
@@ -271,7 +274,10 @@ namespace LudumDare26
                 else
                 {
                     teleportScale = MathHelper.Lerp(teleportScale, 1f, 0.1f);
-                    if (teleportScale > 0.99f) respawning = false;
+                    if (teleportScale > 0.99f)
+                    {
+                        respawning = false;
+                    }
                 }
             }
 
