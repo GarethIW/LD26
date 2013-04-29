@@ -35,7 +35,7 @@ namespace LudumDare26
         Texture2D blankTex;
         Texture2D skyGradient;
         Texture2D cloudTexture;
-
+        Texture2D valveTexture;
 
         List<Water> Waters = new List<Water>();
 
@@ -98,6 +98,7 @@ namespace LudumDare26
             blankTex = Content.Load<Texture2D>("blank");
             skyGradient = Content.Load<Texture2D>("sky-gradient");
             cloudTexture = Content.Load<Texture2D>("cloud-test");
+            valveTexture = Content.Load<Texture2D>("valve");
 
             int layerCount = 0;
             foreach (Layer ml in gameMap.Layers)
@@ -324,9 +325,12 @@ namespace LudumDare26
 
 
                 spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
+                //spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix);// * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
+
                 gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
                 gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
                 gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
+                TriggerController.Instance.DrawValves(spriteBatch, l, valveTexture, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, gameHero);
                 spriteBatch.End();
 
                 

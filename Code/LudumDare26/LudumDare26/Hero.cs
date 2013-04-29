@@ -16,7 +16,7 @@ namespace LudumDare26
         public Vector2 Position;
         public Vector2 Speed;
 
-        public int Layer = 0;
+        public int Layer = 2;
 
         public float Scale = 0.6f;
 

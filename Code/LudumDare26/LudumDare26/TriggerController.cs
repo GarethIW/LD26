@@ -19,9 +19,13 @@ namespace LudumDare26
         {
             public MapObject Object;
             public bool HasTriggered;
+            public Vector2 Speed;
+            public Vector2 Position;
         }
 
         public static TriggerController Instance;
+
+        static Random rand = new Random();
 
         List<Trigger> triggers = new List<Trigger>();
         List<Trigger> valves = new List<Trigger>();
@@ -52,7 +56,9 @@ namespace LudumDare26
                 valves.Add(new Trigger()
                 {
                     Object = o,
-                    HasTriggered = false
+                    HasTriggered = false,
+                    Position = new Vector2(o.Location.Center.X, o.Location.Center.Y),
+                    Speed = new Vector2(3f, 0.1f)
                 });
             }
         }
@@ -78,6 +84,7 @@ namespace LudumDare26
             foreach (Trigger trig in valves)
             {
                 if (!trig.HasTriggered)
+                {
                     if (trig.Object.Location.Contains(Helper.VtoP(gameHero.Position)))
                     {
                         int layer = 0;
@@ -87,6 +94,20 @@ namespace LudumDare26
                             AtValve = true;
                         }
                     }
+                }
+                else
+                {
+                    trig.Position += trig.Speed;
+                    trig.Speed.Y += 0.1f;
+                    trig.Speed.X -=0.02f;
+                    if (trig.Position.Y > (trig.Object.Location.Y + trig.Object.Location.Height) - 40f)
+                    {
+                        trig.Speed.Y = -(trig.Speed.Y / 2);
+                        trig.Position += trig.Speed;
+                    }
+
+                    trig.Speed = Vector2.Clamp(trig.Speed, new Vector2(0, -10f), new Vector2(2f, 10f));
+                }
             }
         }
 
@@ -114,6 +135,14 @@ namespace LudumDare26
             foreach (Trigger t in triggers) t.HasTriggered = false;
             foreach (Trigger v in valves) v.HasTriggered = false;
             WaterTriggered = false;
+        }
+
+        public void DrawValves(SpriteBatch sb, int layer, Texture2D tex, Color col, bool sil, Hero gameHero)
+        {
+            foreach (Trigger v in valves.Where(valve => Convert.ToInt16(valve.Object.Properties["Layer"]) == layer))
+            {
+                sb.Draw(tex, v.Position, new Rectangle(gameHero.usingValve?rand.Next(2) * (tex.Width/2):0, sil?tex.Height/2:0,tex.Width/2,tex.Height/2), col, 0f, new Vector2(tex.Width, tex.Height) / 4, 1f, SpriteEffects.None, 0); //v.Position
+            }
         }
 
         void ActivateTrigger(int num)
