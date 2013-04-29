@@ -44,6 +44,9 @@
     <Compile Include="..\LudumDare26\LudumDare26\Hero.cs">
       <Link>Hero.cs</Link>
     </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Hud.cs">
+      <Link>Hud.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\PrimitiveBatch.cs">
       <Link>PrimitiveBatch.cs</Link>
     </Compile>
@@ -173,6 +176,40 @@
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sky-gradient.xnb">
       <Link>Content\sky-gradient.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hud.xnb">
+      <Link>Content\hud.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-large.xnb">
+      <Link>Content\hudfont-large.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-small.xnb">
+      <Link>Content\hudfont-small.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\climb.xnb">
+      <Link>Content\promptimages\climb.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\crawl.xnb">
+      <Link>Content\promptimages\crawl.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\jump.xnb">
+      <Link>Content\promptimages\jump.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\move.xnb">
+      <Link>Content\promptimages\move.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\use.xnb">
+      <Link>Content\promptimages\use.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

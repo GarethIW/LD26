@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
 	<Asset Type="Graphics:FontDescription">
-    <FontName>WC Mano Negra Bta</FontName>
-    <Size>32</Size>
-    <Spacing>-1</Spacing>
+    <FontName>Visitor TT2 BRK</FontName>
+    <Size>48</Size>
+    <Spacing>2</Spacing>
     <Style>Regular</Style>
     <CharacterRegions>
       <CharacterRegion>

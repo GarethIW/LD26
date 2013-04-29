@@ -26,6 +26,7 @@ namespace LudumDare26
         Map gameMap;
         Camera gameCamera;
         Hero gameHero;
+        Hud gameHud;
         TriggerController gameTriggerController;
         PromptController gamePromptController;
 
@@ -46,7 +47,12 @@ namespace LudumDare26
         double waterRiseTime;
         int waterLevel = 500;
 
+        int highestWaterLevel = 500;
+
         bool emptying = false;
+
+        bool resetting = false;
+        float fadeAlpha = 1f;
 
         public LudumDareGame()
         {
@@ -81,6 +87,9 @@ namespace LudumDare26
 
             // TODO: use this.Content to load your game content here
             gameMap = Content.Load<Map>("map");
+
+            gameHud = new Hud();
+            gameHud.LoadContent(Content);
 
             gameTriggerController = new TriggerController(gameMap);
             gamePromptController = new PromptController();
@@ -154,7 +163,11 @@ namespace LudumDare26
             if (ks.IsKeyDown(Keys.Up)) gameHero.Jump();
             if (ks.IsKeyDown(Keys.Down)) gameHero.Crouch();
 
-            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space)) gameHero.UseObject(gameMap);
+            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space))
+            {
+                if (gameHero.Dead && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
+                gameHero.UseObject(gameMap);
+            }
 
             gameHero.Update(gameTime, gameCamera, gameMap);
 
@@ -163,6 +176,8 @@ namespace LudumDare26
 
             gameTriggerController.Update(gameTime, gameHero);
             gamePromptController.Update(gameTime);
+
+            gameHud.Update(gameTime, waterLevel, gameHero, gameMap);
 
             // Scale layers according to player's layer
             float targetScale = 1f;
@@ -199,6 +214,13 @@ namespace LudumDare26
                 {
                     waterLevel+=2;
 
+                    if (waterLevel > highestWaterLevel)
+                    {
+                        highestWaterLevel = waterLevel;
+                        if(!gameHero.Dead) gameHud.SoulsPerished += 100;
+                    }
+                    else if (!gameHero.Dead) gameHud.SoulsPerished += 10;
+
                     foreach (Water w in Waters)
                     {
                         w.bounds.Offset(new Point(0, -2));
@@ -209,8 +231,9 @@ namespace LudumDare26
 
             if ((gameMap.Height * gameMap.TileHeight) - waterLevel < gameHero.Position.Y - 200f)
                 gameHero.UnderWater = true;
+                //emptying = true;
 
-            if (gameHero.usingValve)
+            if (gameHero.usingValve || emptying)
             {
                 waterLevel-=4;
                 foreach (Water w in Waters)
@@ -218,8 +241,10 @@ namespace LudumDare26
                     w.bounds.Offset(new Point(0, 4));
                     w.bounds.Height -= 4;
                 }
-                //if (waterLevel < 200) emptying = false;
+                
             }
+
+            if (waterLevel < 200) emptying = false;
 
             float startScale = 1.5f;
             foreach (Water w in Waters.OrderByDescending(wat => wat.Scale))
@@ -252,7 +277,16 @@ namespace LudumDare26
             }
 
 
-            
+            if (!resetting)
+            {
+                fadeAlpha = MathHelper.Lerp(fadeAlpha, 0f, 0.05f);
+            }
+            else
+            {
+                fadeAlpha = MathHelper.Lerp(fadeAlpha, 1f, 0.05f);
+                if (fadeAlpha > 0.99f)
+                    Reset();
+            }
 
             base.Update(gameTime);
         }
@@ -322,6 +356,13 @@ namespace LudumDare26
 
             spriteBatch.Begin();
             gamePromptController.Draw(GraphicsDevice, spriteBatch);
+            gameHud.Draw(GraphicsDevice, spriteBatch);
+
+            if (fadeAlpha > 0.05f)
+            {
+                spriteBatch.Draw(blankTex, GraphicsDevice.Viewport.Bounds, Color.Black * fadeAlpha);
+            }
+
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -335,6 +376,50 @@ namespace LudumDare26
                  sb.Draw(cloudTexture, new Vector2((x + cloud.X)/cloud.Z , MathHelper.Clamp(cloud.Y, 0, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 1);
             }
             sb.End();
+        }
+
+        void Reset()
+        {
+            waterLevel = 500;
+            highestWaterLevel = 500;
+
+            foreach (Water w in Waters)
+                w.bounds = new Rectangle(-GraphicsDevice.Viewport.Bounds.Width, (gameMap.Height * gameMap.TileHeight) - waterLevel, ((gameMap.Width * gameMap.TileWidth) * 2) + GraphicsDevice.Viewport.Bounds.Width, 400 + waterLevel);
+
+            TriggerController.Instance.Reset();
+            PromptController.Instance.Reset();
+            gameHud.Reset();
+            gameHero.Reset();
+
+            gameCamera.Position = gameHero.Position;
+            gameCamera.Target = gameHero.Position;
+
+            float scale = 1f;
+            for (int i = 0; i < LayerDepths.Length; i++)
+            {
+                LayerDepths[i] = scale;
+                LayerColors[i] = new Color((1f - (scale * 0.5f)) * 0.4f, (1f - (scale * 0.5f)) * 0.5f, (1f - (scale * 0.5f)) * 0.9f);//Color.White * (scale * 0.5f);
+                if (scale > 0f) scale -= 0.33333f;
+            }
+
+            scale = 1.5f;
+            for (int i = 0; i < Waters.Count; i++)
+            {
+                Waters[i] = new Water(GraphicsDevice, gameMap, new Rectangle(-GraphicsDevice.Viewport.Bounds.Width, (gameMap.Height * gameMap.TileHeight) - waterLevel, ((gameMap.Width * gameMap.TileWidth) * 2) + GraphicsDevice.Viewport.Bounds.Width, 400 + waterLevel), new Color(50, 128, 255), Color.Black, scale);
+                scale -= 0.1f;
+            }
+
+            scale = 1.5f;
+            for (int i = 0; i < Clouds.Count; i++)
+            {
+                Clouds[i] = new Vector4(rand.Next(1920), 1000f, scale, 0f);
+                scale -= 0.1f;
+            }
+
+        
+            
+
+            resetting = false;
         }
     }
 }

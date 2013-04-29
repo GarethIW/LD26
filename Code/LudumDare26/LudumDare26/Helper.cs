@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace LudumDare26
 {
@@ -110,6 +111,12 @@ namespace LudumDare26
         public static Point VtoP(Vector2 v)
         {
             return new Point((int)v.X, (int)v.Y);
+        }
+
+        public static void ShadowText(SpriteBatch sb, SpriteFont font, string text, Vector2 pos, Color col, Vector2 off, float scale)
+        {
+            sb.DrawString(font, text, pos + (Vector2.One * 2f), new Color(0, 0, 0, col.A), 0f, off, scale, SpriteEffects.None, 1);
+            sb.DrawString(font, text, pos, col, 0f, off, scale, SpriteEffects.None, 1);
         }
     }
 }

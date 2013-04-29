@@ -135,8 +135,7 @@ namespace LudumDare26
 
         }
 
-
-
+       
         private void CreateParticle(Vector2 pos, Vector2 velocity)
         {
             particles.Add(new Particle(pos, velocity, 0));

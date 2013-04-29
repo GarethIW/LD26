@@ -109,6 +109,13 @@ namespace LudumDare26
             }
         }
 
+        public void Reset()
+        {
+            foreach (Trigger t in triggers) t.HasTriggered = false;
+            foreach (Trigger v in valves) v.HasTriggered = false;
+            WaterTriggered = false;
+        }
+
         void ActivateTrigger(int num)
         {
             switch (num)
@@ -183,10 +190,12 @@ namespace LudumDare26
                     PromptController.Instance.AddPrompt("story10", PromptController.PromptType.Text, "The water is rising.", true, 10000, 0);
                     PromptController.Instance.AddPrompt("story11", PromptController.PromptType.Text, "And only Gerde can stop it.", true, 8000, 2000);
                     WaterTriggered = true;
+                    Hud.Instance.ShowingWater = true;
                     break;
                 case 15:
                     PromptController.Instance.AddPrompt("story12", PromptController.PromptType.Text, "Gerde can buy her people precious time.", true, 7000, 0);
                     PromptController.Instance.AddPrompt("story13", PromptController.PromptType.Text, "There are valves that will stem the tide.", true, 5000, 2000);
+                    Hud.Instance.ShowingSouls = true;
                     break;
                 case 16:
                     PromptController.Instance.AddPrompt("valve1", PromptController.PromptType.Text, "Gerde can open drainage valves.", false, 0, 0);

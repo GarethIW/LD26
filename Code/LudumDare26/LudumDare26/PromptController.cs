@@ -59,6 +59,12 @@ namespace LudumDare26
             promptImages.Add("use", content.Load<Texture2D>("promptimages/use"));
         }
 
+        public void Reset()
+        {
+            ClearPrompts();
+            prompts.Clear();
+        }
+
         public void Update(GameTime gameTime)
         {
             foreach (Prompt p in prompts)
@@ -98,7 +104,7 @@ namespace LudumDare26
                     {
                         case PromptType.Text:
                             Vector2 size = font.MeasureString(p.Text);
-                            ShadowText(sb, p.Text, pos, Color.Salmon * p.Alpha, size / 2, 1f);
+                            Helper.ShadowText(sb, font, p.Text, pos, Color.Salmon * p.Alpha, size / 2, 1f);
                             pos.Y += (size.Y-5);
                             break;
                         case PromptType.Image:
@@ -140,10 +146,13 @@ namespace LudumDare26
             catch (Exception ex) { }
         }
 
-        void ShadowText(SpriteBatch sb, string text, Vector2 pos, Color col, Vector2 off, float scale)
+        public void ClearPrompts()
         {
-            sb.DrawString(font, text, pos + (Vector2.One * 2f), new Color(0, 0, 0, col.A), 0f, off, scale, SpriteEffects.None, 1);
-            sb.DrawString(font, text, pos, col, 0f, off, scale, SpriteEffects.None, 1);
+            foreach (Prompt p in prompts)
+            {
+                p.IsActive = false;
+                p.HasDisplayed = true;
+            }
         }
 
     }

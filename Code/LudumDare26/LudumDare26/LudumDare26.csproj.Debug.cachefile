@@ -10,6 +10,9 @@ Content\promptimages\crawl.xnb
 Content\promptimages\move.xnb
 Content\promptimages\use.xnb
 Content\promptimages\jump.xnb
+Content\hud.xnb
+Content\hudfont-small.xnb
+Content\hudfont-large.xnb
 Content\spineboy.atlas
 Content\spinegirl.png
 Content\spineboy.png

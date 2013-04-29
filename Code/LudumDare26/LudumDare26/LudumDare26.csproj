@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cloud.cs" />
+    <Compile Include="Hud.cs" />
     <Compile Include="PromptController.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Hero.cs" />
