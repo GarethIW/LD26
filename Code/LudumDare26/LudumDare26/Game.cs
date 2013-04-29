@@ -263,7 +263,7 @@ namespace LudumDare26
             {
                 Vector4 cl = Clouds[c];
                 cl.Z = MathHelper.Lerp(cl.Z, startScale + (gameHero.Layer * 0.25f), 0.01f);
-                cl.Y = (((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) - ((((float)GraphicsDevice.Viewport.Height/2) / (float)(gameMap.Height * gameMap.TileHeight)) * (gameHero.Position.Y*3)))  +100*cl.Z;
+                cl.Y = ((((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) - ((((float)GraphicsDevice.Viewport.Height/2) / (float)(gameMap.Height * gameMap.TileHeight)) * (gameHero.Position.Y*3)))  +100*cl.Z);
                 //cl.Y = ((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) * -(cl.Z * 1.5f);
                 cl.X -= 0.1f;
                 if (cl.X <= -cloudTexture.Width) cl.X = 0;
@@ -321,9 +321,9 @@ namespace LudumDare26
                         if (l == LayerDepths.Length - 1) DrawCloud(spriteBatch, cloud);
                         else if (cloud.Z >= LayerDepths[l + 1]) DrawCloud(spriteBatch, cloud);
                     }
-               
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(LayerDepths[l]) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
+
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
                 gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
                 gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
                 gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
@@ -373,7 +373,7 @@ namespace LudumDare26
             sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(cloud.Z) * Matrix.CreateTranslation(new Vector3(0f, MathHelper.Clamp(100f/cloud.Z,0f,200f), 0f)));
             for (int x = -cloudTexture.Width; x < (gameMap.Width * gameMap.TileWidth) + cloudTexture.Width; x += (int)((float)cloudTexture.Width))
             {
-                 sb.Draw(cloudTexture, new Vector2((x + cloud.X)/cloud.Z , MathHelper.Clamp(cloud.Y, 0, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 1);
+                 sb.Draw(cloudTexture, new Vector2((x + cloud.X)/cloud.Z , -100f+MathHelper.Clamp(cloud.Y, 0f, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 1);
             }
             sb.End();
         }

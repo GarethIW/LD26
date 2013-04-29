@@ -4,127 +4,127 @@ filter: Linear,Linear
 repeat: none
 left-lower-leg
   rotate: false
-  xy: 131, 110
-  size: 50, 63
-  orig: 50, 63
+  xy: 204, 68
+  size: 47, 64
+  orig: 49, 64
   offset: 0, 0
   index: -1
 right-shoulder
   rotate: false
-  xy: 77, 179
-  size: 38, 38
-  orig: 38, 38
+  xy: 199, 267
+  size: 52, 51
+  orig: 52, 51
   offset: 0, 0
   index: -1
 head
   rotate: false
   xy: 2, 2
-  size: 103, 110
-  orig: 103, 110
-  offset: 0, 0
+  size: 103, 104
+  orig: 107, 120
+  offset: 4, 1
   index: -1
-eyes
-  rotate: false
-  xy: 111, 219
-  size: 35, 31
-  orig: 35, 31
-  offset: 0, 0
-  index: -1
-eyes-closed
+torso-wires
   rotate: false
   xy: 107, 2
-  size: 35, 31
-  orig: 35, 31
+  size: 95, 141
+  orig: 95, 141
   offset: 0, 0
   index: -1
 torso
   rotate: false
-  xy: 2, 114
-  size: 73, 103
-  orig: 73, 103
+  xy: 2, 108
+  size: 95, 108
+  orig: 95, 108
   offset: 0, 0
   index: -1
 right-foot
   rotate: false
-  xy: 148, 2
-  size: 66, 40
-  orig: 66, 40
+  xy: 99, 145
+  size: 67, 30
+  orig: 67, 30
   offset: 0, 0
   index: -1
 left-foot
   rotate: false
-  xy: 148, 44
-  size: 64, 40
-  orig: 64, 40
+  xy: 99, 177
+  size: 65, 31
+  orig: 65, 31
   offset: 0, 0
   index: -1
 neck
   rotate: false
-  xy: 132, 86
-  size: 22, 8
-  orig: 22, 8
+  xy: 203, 204
+  size: 34, 28
+  orig: 34, 28
   offset: 0, 0
   index: -1
 right-upper-leg
   rotate: false
-  xy: 148, 175
-  size: 48, 62
-  orig: 48, 62
+  xy: 204, 134
+  size: 44, 68
+  orig: 44, 70
   offset: 0, 0
   index: -1
 left-shoulder
   rotate: false
-  xy: 214, 62
-  size: 22, 38
-  orig: 22, 38
+  xy: 168, 145
+  size: 34, 53
+  orig: 34, 53
   offset: 0, 0
   index: -1
 left-arm
   rotate: false
-  xy: 107, 35
-  size: 28, 28
-  orig: 30, 28
-  offset: 2, 0
+  xy: 166, 200
+  size: 35, 29
+  orig: 35, 29
+  offset: 0, 0
   index: -1
 left-hand
   rotate: false
-  xy: 117, 179
-  size: 29, 38
-  orig: 29, 38
+  xy: 2, 218
+  size: 28, 35
+  orig: 28, 35
   offset: 0, 0
   index: -1
 right-arm
   rotate: false
-  xy: 107, 65
-  size: 23, 43
-  orig: 23, 43
+  xy: 2, 255
+  size: 21, 45
+  orig: 21, 45
   offset: 0, 0
   index: -1
 right-lower-leg
   rotate: false
-  xy: 77, 114
-  size: 52, 63
-  orig: 52, 63
+  xy: 204, 2
+  size: 50, 64
+  orig: 50, 64
+  offset: 0, 0
+  index: -1
+right-foot-idle
+  rotate: false
+  xy: 199, 234
+  size: 53, 31
+  orig: 53, 31
   offset: 0, 0
   index: -1
 pelvis
   rotate: false
-  xy: 2, 219
-  size: 68, 35
-  orig: 68, 35
+  xy: 99, 210
+  size: 63, 47
+  orig: 63, 47
   offset: 0, 0
   index: -1
 left-upper-leg
   rotate: false
-  xy: 216, 2
-  size: 37, 58
-  orig: 37, 58
+  xy: 164, 231
+  size: 33, 66
+  orig: 33, 66
   offset: 0, 0
   index: -1
 right-hand
   rotate: false
-  xy: 72, 219
-  size: 37, 35
-  orig: 37, 35
-  offset: 0, 0
+  xy: 32, 218
+  size: 22, 58
+  orig: 24, 58
+  offset: 1, 0
   index: -1
