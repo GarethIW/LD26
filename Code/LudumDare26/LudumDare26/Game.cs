@@ -212,11 +212,11 @@ namespace LudumDare26
 
             if (gameHero.usingValve)
             {
-                waterLevel-=3;
+                waterLevel-=4;
                 foreach (Water w in Waters)
                 {
-                    w.bounds.Offset(new Point(0, 3));
-                    w.bounds.Height -= 3;
+                    w.bounds.Offset(new Point(0, 4));
+                    w.bounds.Height -= 4;
                 }
                 //if (waterLevel < 200) emptying = false;
             }
