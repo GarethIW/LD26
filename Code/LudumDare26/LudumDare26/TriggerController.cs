@@ -244,14 +244,16 @@ namespace LudumDare26
                     break;
 
                 case 19:
+                    PromptController.Instance.AddPrompt("story19", PromptController.PromptType.Text, "Gerde seems to recall that there are", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story20", PromptController.PromptType.Text, "two more valves to find.", true, 7000, 0);
+                    break;
+
+                case 20:
                     PromptController.Instance.AddPrompt("story17", PromptController.PromptType.Text, "Gerde allows herself a flicker of hope", true, 7000, 0);
                     PromptController.Instance.AddPrompt("story18", PromptController.PromptType.Text, "before returning to the task at hand.", true, 7000, 0);
                     break;
 
-                case 20:
-                    PromptController.Instance.AddPrompt("story19", PromptController.PromptType.Text, "Gerde seems to recall that there are", true, 7000, 0);
-                    PromptController.Instance.AddPrompt("story20", PromptController.PromptType.Text, "two more valves to find.", true, 7000, 0);
-                    break;
+                
             }
         }
 
