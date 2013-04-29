@@ -44,7 +44,7 @@ namespace LudumDare26
         Color[] LayerColors;
 
         double waterRiseTime;
-        int waterLevel = 200;
+        int waterLevel = 500;
 
         bool emptying = false;
 
@@ -154,7 +154,7 @@ namespace LudumDare26
             if (ks.IsKeyDown(Keys.Up)) gameHero.Jump();
             if (ks.IsKeyDown(Keys.Down)) gameHero.Crouch();
 
-            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space)) gameHero.UsePortal(gameMap);
+            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space)) gameHero.UseObject(gameMap);
 
             gameHero.Update(gameTime, gameCamera, gameMap);
 
@@ -197,28 +197,28 @@ namespace LudumDare26
 
                 if (TriggerController.Instance.WaterTriggered)
                 {
-                    waterLevel++;
+                    waterLevel+=2;
 
                     foreach (Water w in Waters)
                     {
-                        w.bounds.Offset(new Point(0, -1));
-                        w.bounds.Height++;
+                        w.bounds.Offset(new Point(0, -2));
+                        w.bounds.Height+=2;
                     }
                 }
             }
 
             if ((gameMap.Height * gameMap.TileHeight) - waterLevel < gameHero.Position.Y - 200f)
-                emptying = true;
+                gameHero.UnderWater = true;
 
-            if (emptying)
+            if (gameHero.usingValve)
             {
-                waterLevel--;
+                waterLevel-=3;
                 foreach (Water w in Waters)
                 {
-                    w.bounds.Offset(new Point(0, 1));
-                    w.bounds.Height--;
+                    w.bounds.Offset(new Point(0, 3));
+                    w.bounds.Height -= 3;
                 }
-                if (waterLevel < 200) emptying = false;
+                //if (waterLevel < 200) emptying = false;
             }
 
             float startScale = 1.5f;

@@ -42,6 +42,9 @@ namespace LudumDare26
         bool grabbed = false;
         bool climbing = false;
 
+        public bool usingValve = false;
+        double valveUseTime = 0;
+
         bool teleporting = false;
         int teleportingDir = 0;
         float teleportScale = 1f;
@@ -51,11 +54,22 @@ namespace LudumDare26
 
         bool justUngrabbed = false;
 
+        public bool UnderWater = false;
+        double drownTime = 0;
+
+        public bool Dead = false;
+
         Vector2 grabbedPosition;
+
+        Vector2 checkPointPosition;
+        int checkPointLayer;
+
+        bool respawning;
 
         public Hero(Vector2 spawnPosition)
         {
             Position = spawnPosition;
+            checkPointPosition = spawnPosition;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
@@ -74,6 +88,7 @@ namespace LudumDare26
             Animations.Add("fall", skeleton.Data.FindAnimation("fall"));
             Animations.Add("grab", skeleton.Data.FindAnimation("grab"));
             Animations.Add("climb", skeleton.Data.FindAnimation("climb"));
+            Animations.Add("turnvalve", skeleton.Data.FindAnimation("turnvalve"));
 
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
@@ -164,6 +179,9 @@ namespace LudumDare26
                     Layer = teleportingDir;
                     teleporting = false;
                     teleportFinished = false;
+
+                    checkPointLayer = Layer;
+                    checkPointPosition = Position + new Vector2(0,-30f);
                 }
             }
             else
@@ -172,15 +190,63 @@ namespace LudumDare26
                     teleportScale = MathHelper.Lerp(teleportScale, 1f, 0.1f);
             }
 
+            if (usingValve)
+            {
+                animTime += gameTime.ElapsedGameTime.Milliseconds / 1000f;
+                Animations["turnvalve"].Apply(skeleton, animTime, true);
+
+                valveUseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (valveUseTime >= 5000)
+                {
+                    usingValve = false;
+                    TriggerController.Instance.DeactivateValve(this);
+                }
+            }
+
+            if (UnderWater)
+            {
+                drownTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (drownTime >= 2000)
+                {
+                    respawning = true;
+
+                    if ((Position - checkPointPosition).Length() < 50f)
+                    {
+                        // checkpoint is underwater, game over!
+                    }
+                }
+            }
+            else drownTime = 0;
+
+            if (respawning)
+            {
+                if ((Position - checkPointPosition).Length() > 1f)
+                {
+                    teleportScale = 0f;
+                    Position = Vector2.Lerp(Position, checkPointPosition, 0.1f);
+                }
+                else
+                {
+                    teleportScale = MathHelper.Lerp(teleportScale, 1f, 0.1f);
+                    if (teleportScale > 0.99f) respawning = false;
+                }
+            }
+
             skeleton.RootBone.ScaleX = Scale * teleportScale;
             skeleton.RootBone.ScaleY = Scale * teleportScale;
 
-    
-            Position += Speed;
-            collisionRect.Location = new Point((int)Position.X - (collisionRect.Width / 2), (int)Position.Y - (collisionRect.Height));
-            CheckCollision(gameMap);
+            if (!respawning)
+            {
+                Position += Speed;
+                collisionRect.Location = new Point((int)Position.X - (collisionRect.Width / 2), (int)Position.Y - (collisionRect.Height));
+                CheckCollision(gameMap);
+
+            }
 
             Position.X = MathHelper.Clamp(Position.X, 0, gameMap.Width * gameMap.TileWidth);
+
 
             skeleton.RootBone.X = Position.X;
             skeleton.RootBone.Y = Position.Y;
@@ -193,6 +259,8 @@ namespace LudumDare26
             walking = false;
             oppositeDirPushed = false;
             Speed.X = 0f;
+
+            UnderWater = false;
         }
 
         public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Camera gameCamera)
@@ -212,7 +280,7 @@ namespace LudumDare26
 
         public void MoveLeftRight(float dir)
         {
-            if (teleporting) return;
+            if (teleporting || usingValve || respawning || teleportScale<0.95f) return;
 
             if (grabbed)
             {
@@ -227,9 +295,21 @@ namespace LudumDare26
             
         }
 
-        public void UsePortal(Map gameMap)
+        public void UseObject(Map gameMap)
         {
+            if (usingValve) return;
             if (teleporting) return;
+
+            if (TriggerController.Instance.AtValve)
+            {
+                usingValve = true;
+                valveUseTime = 0;
+
+                PromptController.Instance.RemovePrompt("valve1");
+                PromptController.Instance.RemovePrompt("valve2");
+
+                return;
+            }
 
             MapObjectLayer portalLayer = gameMap.GetLayer("Portals") as MapObjectLayer;
 
@@ -259,7 +339,7 @@ namespace LudumDare26
 
         public void Jump()
         {
-            if (teleporting) return;
+            if (teleporting || usingValve || respawning || teleportScale < 0.95f) return;
 
             if (grabbed && (Position - grabbedPosition).Length()<5f && !oppositeDirPushed)
             {
@@ -291,7 +371,7 @@ namespace LudumDare26
 
         public void Crouch()
         {
-            if (teleporting) return;
+            if (teleporting || usingValve || respawning || teleportScale < 0.95f) return;
 
             if (grabbed)
             {
@@ -307,6 +387,8 @@ namespace LudumDare26
         void CheckCollision(Map gameMap)
         {
             //collisionRect.Offset(new Point((int)Speed.X, (int)Speed.Y));
+
+            if (respawning) return;
 
             Rectangle? collRect;
 

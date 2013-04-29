@@ -90,19 +90,13 @@
    <property name="Collision" value="On"/>
   </properties>
   <data encoding="base64" compression="gzip">
-   H4sIAAAAAAAAC+3WfUoVURgH4Jn/TNK2oZW6DfsCawf5DVfB3IFlJUhb6baTWkhWS/AHt4vD5aLzZV24zwM/zpkDMzDn8M47RQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANDez8r8d/InuUp+TbmeXC+mXNOPh2VRLCXLyaOWI/15mv1cS9aTjZYj/XlpP2fKkfP478a9eCFn8SBZLG/W2oy0M9m7V5LV5LF+/s8NypvePbaZ+bPkuX7e2DD51uH+y3LUu19V9m8r89fJmznd0y6+Jz863P+kHPXu48ren2T+Ljl1Ho1N1kfTenmhPno1WR9N62WgPjob18BdYx2Xf/f8i71vbVwDd41Nfc2ZDJ1LI3Vro+t/F/XUrY2u/11M9zbfj+1kJ9lN9pL95GAG1w/n4Ft3lnd8n3xIzpOPyafk8wyuX8zBedAP/XS26Kf3q8++Wu17tz13HvpjW3321Wrfu+25+iMAAEA91yOrjytAnAAA
+   H4sIAAAAAAAAC+3WfUoVURgH4Jn/LNK2kZa5Da3EagemlaCCuoO+BWkr2k5qIZkuwR9cL3e4XHS+0gv3eeDHOXNgBuYc3nmnKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANr7W5lfJJfJefJvwvX4ejHhmn48KotiPllIHrcc6c+z7Ody8jxZaTnSn1f2c6rsOY97N+zFczmLB8nDcrTWZqSd8d79JFlMlvTzO7dbjnr30Grma8kL/byxs+RXh/tPykHvXq/s3+vM3yRvZ3RPu/id/Olw/9Ny0Lv3K3t/kPlhcuQ8Ghuvj6b18lJ99Gq8PprWy6766GxYA7eNdZxc7/nPjBvXoZlhDdw2NnWaszhzHo3UrY2u/13UU7c2uv53Mdlmvh/vkq1kO3mffEg+TuH6zgx86z7lHT8nX5Kvybfke/JjCtePZ+A86Id+Ol300/+rz75a7Xs3PXcW+mNbffbVat+76bn6IwAAQD1XQxZMvkCcAAA=
   </data>
  </layer>
  <objectgroup name="Spawn" width="100" height="100">
-  <object x="5793" y="5039" width="61" height="73"/>
+  <object x="1451" y="5347" width="61" height="73"/>
  </objectgroup>
  <objectgroup name="Portals" width="100" height="100">
-  <object x="2456" y="5331" width="69" height="76">
-   <properties>
-    <property name="In" value="1"/>
-    <property name="Out" value="0"/>
-   </properties>
-  </object>
   <object x="5698" y="4978" width="64" height="133">
    <properties>
     <property name="In" value="0"/>
@@ -167,9 +161,19 @@
     <property name="Layer" value="2"/>
    </properties>
   </object>
+  <object name="15" x="2093" y="4269" width="127" height="213">
+   <properties>
+    <property name="Layer" value="3"/>
+   </properties>
+  </object>
+  <object name="16" x="642" y="3762" width="127" height="213">
+   <properties>
+    <property name="Layer" value="2"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="Valves" width="100" height="100">
-  <object x="179" y="3776" width="123" height="181">
+  <object x="137" y="3771" width="231" height="232">
    <properties>
     <property name="Layer" value="2"/>
    </properties>

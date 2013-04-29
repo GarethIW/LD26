@@ -52,7 +52,11 @@ namespace LudumDare26
         {
             font = content.Load<SpriteFont>("font");
 
-
+            promptImages.Add("move", content.Load<Texture2D>("promptimages/move"));
+            promptImages.Add("jump", content.Load<Texture2D>("promptimages/jump"));
+            promptImages.Add("crawl", content.Load<Texture2D>("promptimages/crawl"));
+            promptImages.Add("climb", content.Load<Texture2D>("promptimages/climb"));
+            promptImages.Add("use", content.Load<Texture2D>("promptimages/use"));
         }
 
         public void Update(GameTime gameTime)
@@ -98,6 +102,9 @@ namespace LudumDare26
                             pos.Y += (size.Y-5);
                             break;
                         case PromptType.Image:
+                            pos.Y += 10;
+                            sb.Draw(promptImages[p.Text], pos, null, Color.White * p.Alpha, 0f, new Vector2(promptImages[p.Text].Width, promptImages[p.Text].Height) / 2, 0.8f, SpriteEffects.None, 1);
+                            pos.Y += (promptImages[p.Text].Height);
                             break;
                     }
                 }

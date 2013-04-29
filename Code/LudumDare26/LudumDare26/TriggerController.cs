@@ -28,6 +28,8 @@ namespace LudumDare26
 
         public bool WaterTriggered = false;
 
+        public bool AtValve = false;
+
         public TriggerController(Map gameMap)
         {
             Instance = this;
@@ -71,6 +73,40 @@ namespace LudumDare26
                         }
                     }
             }
+
+            AtValve = false;
+            foreach (Trigger trig in valves)
+            {
+                if (!trig.HasTriggered)
+                    if (trig.Object.Location.Contains(Helper.VtoP(gameHero.Position)))
+                    {
+                        int layer = 0;
+                        if (trig.Object.Properties.Contains("Layer")) layer = Convert.ToInt16(trig.Object.Properties["Layer"]);
+                        if (gameHero.Layer == layer)
+                        {
+                            AtValve = true;
+                        }
+                    }
+            }
+        }
+
+        public void DeactivateValve(Hero gameHero)
+        {
+            if (!AtValve) return;
+
+            foreach (Trigger trig in valves)
+            {
+                if (!trig.HasTriggered)
+                    if (trig.Object.Location.Contains(Helper.VtoP(gameHero.Position)))
+                    {
+                        int layer = 0;
+                        if (trig.Object.Properties.Contains("Layer")) layer = Convert.ToInt16(trig.Object.Properties["Layer"]);
+                        if (gameHero.Layer == layer)
+                        {
+                            trig.HasTriggered = true;
+                        }
+                    }
+            }
         }
 
         void ActivateTrigger(int num)
@@ -80,28 +116,39 @@ namespace LudumDare26
                 case 1:
                     PromptController.Instance.AddPrompt("intro1", PromptController.PromptType.Text, "This is Gerde.", false, 0, 0);
                     PromptController.Instance.AddPrompt("intro2", PromptController.PromptType.Text, "Move her with the cursor keys.", false, 0, 1000);
+                    PromptController.Instance.AddPrompt("intro3", PromptController.PromptType.Image, "move", false, 0, 1000);
                     break;
                 case 2:
                     PromptController.Instance.RemovePrompt("intro1");
                     PromptController.Instance.RemovePrompt("intro2");
+                    PromptController.Instance.RemovePrompt("intro3");
+
                     break;
                 case 3:
                     PromptController.Instance.AddPrompt("jump1", PromptController.PromptType.Text, "Gerde can jump.", false, 0, 0);
+                    PromptController.Instance.AddPrompt("jump2", PromptController.PromptType.Image, "jump", false, 0, 0);
                     break;
                 case 4:
                     PromptController.Instance.RemovePrompt("jump1");
+                    PromptController.Instance.RemovePrompt("jump2");
                     break;
                 case 5:
                     PromptController.Instance.AddPrompt("climb1", PromptController.PromptType.Text, "Gerde can grab and climb onto ledges.", false, 0, 0);
+                    PromptController.Instance.AddPrompt("climb2", PromptController.PromptType.Image, "climb", false, 0, 0);
+
                     break;
                 case 6:
                     PromptController.Instance.RemovePrompt("climb1");
+                    PromptController.Instance.RemovePrompt("climb2");
                     break;
                 case 7:
                     PromptController.Instance.AddPrompt("crouch1", PromptController.PromptType.Text, "Gerde can crawl to fit through small spaces.", false, 0, 0);
+                    PromptController.Instance.AddPrompt("crouch2", PromptController.PromptType.Image, "crawl", false, 0, 0);
+
                     break;
                 case 8:
                     PromptController.Instance.RemovePrompt("crouch1");
+                    PromptController.Instance.RemovePrompt("crouch2");
                     break;
                 case 9:
                     PromptController.Instance.AddPrompt("story1", PromptController.PromptType.Text, "Gerde is sad.", true, 7000, 0);
@@ -113,12 +160,14 @@ namespace LudumDare26
                     PromptController.Instance.AddPrompt("story5", PromptController.PromptType.Text, "Among other accomplishments, they have mastered", true, 6000, 1000);
                     PromptController.Instance.AddPrompt("story6", PromptController.PromptType.Text, "the science of teleportation.", true, 6000, 1000);
                     PromptController.Instance.AddPrompt("teleport1", PromptController.PromptType.Text, "Gerde can use the teleporters.", false, 0, 8000);
+                    PromptController.Instance.AddPrompt("teleport2", PromptController.PromptType.Image, "use", false, 0, 8000);
                     break;
                 case 11:
                     PromptController.Instance.RemovePrompt("story4");
                     PromptController.Instance.RemovePrompt("story5");
                     PromptController.Instance.RemovePrompt("story6");
                     PromptController.Instance.RemovePrompt("teleport1");
+                    PromptController.Instance.RemovePrompt("teleport2");
                     break;
                 case 12:
                     PromptController.Instance.RemovePrompt("story1");
@@ -134,6 +183,14 @@ namespace LudumDare26
                     PromptController.Instance.AddPrompt("story10", PromptController.PromptType.Text, "The water is rising.", true, 10000, 0);
                     PromptController.Instance.AddPrompt("story11", PromptController.PromptType.Text, "And only Gerde can stop it.", true, 8000, 2000);
                     WaterTriggered = true;
+                    break;
+                case 15:
+                    PromptController.Instance.AddPrompt("story12", PromptController.PromptType.Text, "Gerde can buy her people precious time.", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story13", PromptController.PromptType.Text, "There are valves that will stem the tide.", true, 5000, 2000);
+                    break;
+                case 16:
+                    PromptController.Instance.AddPrompt("valve1", PromptController.PromptType.Text, "Gerde can open drainage valves.", false, 0, 0);
+                    PromptController.Instance.AddPrompt("valve2", PromptController.PromptType.Image, "use", false, 0, 0);
                     break;
 
             }
