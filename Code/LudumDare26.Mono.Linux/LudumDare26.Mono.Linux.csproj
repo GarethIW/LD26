@@ -9,7 +9,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LudumDare26.Mono.Linux</RootNamespace>
-    <AssemblyName>LudumDare26.Mono.Linux</AssemblyName>
+    <AssemblyName>OtherSpace</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -35,6 +35,9 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\LudumDare26\LudumDare26\AudioController.cs">
+      <Link>AudioController.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Game.cs">
       <Link>Game.cs</Link>
     </Compile>
@@ -152,6 +155,14 @@
       <Link>Content\tilesheet.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet2-white.png">
+      <Link>Content\tilesheet2-white.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\tilesheet2.png">
+      <Link>Content\tilesheet2.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\Linux\SDL.dll">
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -167,56 +178,6 @@
       <Project>{032d8afe-d713-48c8-9a4e-93f31a9e7cc1}</Project>
       <Name>TiledLib.Mono.Linux</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\blank.xnb">
-      <Link>Content\blank.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\map.xnb">
-      <Link>Content\map.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.atlas">
-      <Link>Content\spinegirl.atlas</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.json">
-      <Link>Content\spinegirl.json</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sky-gradient.xnb">
-      <Link>Content\sky-gradient.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\cloud-test.xnb">
-      <Link>Content\cloud-test.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\font.xnb">
-      <Link>Content\font.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hud.xnb">
-      <Link>Content\hud.xnb</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-large.xnb">
-      <Link>Content\hudfont-large.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-small.xnb">
-      <Link>Content\hudfont-small.xnb</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\climb.xnb">
@@ -238,6 +199,94 @@
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\promptimages\use.xnb">
       <Link>Content\promptimages\use.xnb</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\ambient1.xnb">
+      <Link>Content\sfx\ambient1.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\ambient2.xnb">
+      <Link>Content\sfx\ambient2.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-grass.xnb">
+      <Link>Content\sfx\fstep-grass.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-metal.xnb">
+      <Link>Content\sfx\fstep-metal.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-wood.xnb">
+      <Link>Content\sfx\fstep-wood.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\splash.xnb">
+      <Link>Content\sfx\splash.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\teleport_in.xnb">
+      <Link>Content\sfx\teleport_in.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\teleport_out.xnb">
+      <Link>Content\sfx\teleport_out.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\valve.xnb">
+      <Link>Content\sfx\valve.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\water.xnb">
+      <Link>Content\sfx\water.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.atlas">
+      <Link>Content\spinegirl.atlas</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26Content\spinegirl.json">
+      <Link>Content\spinegirl.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\blank.xnb">
+      <Link>Content\blank.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\cloud-test.xnb">
+      <Link>Content\cloud-test.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\font.xnb">
+      <Link>Content\font.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hud.xnb">
+      <Link>Content\hud.xnb</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-large.xnb">
+      <Link>Content\hudfont-large.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\hudfont-small.xnb">
+      <Link>Content\hudfont-small.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\map.xnb">
+      <Link>Content\map.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sky-gradient.xnb">
+      <Link>Content\sky-gradient.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\valve.xnb">
+      <Link>Content\valve.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

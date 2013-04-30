@@ -54,6 +54,10 @@ namespace LudumDare26
         bool resetting = false;
         float fadeAlpha = 1f;
 
+        SoundEffectInstance ambient1;
+        SoundEffectInstance ambient2;
+        SoundEffectInstance water;
+
         public LudumDareGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -71,6 +75,7 @@ namespace LudumDare26
             // TODO: Add your initialization logic here
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
+            Window.AllowUserResizing = false;
             graphics.ApplyChanges();
 
             base.Initialize();
@@ -82,6 +87,8 @@ namespace LudumDare26
         /// </summary>
         protected override void LoadContent()
         {
+            AudioController.LoadContent(Content);
+
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -131,7 +138,20 @@ namespace LudumDare26
             {
                 Clouds.Add(new Vector4(rand.Next(1920), 1000f, scale, 0f));
             }
-            
+
+            ambient1 = Content.Load<SoundEffect>("sfx/ambient1").CreateInstance();
+            ambient2 = Content.Load<SoundEffect>("sfx/ambient2").CreateInstance();
+            water = Content.Load<SoundEffect>("sfx/water").CreateInstance();
+
+            ambient1.Volume = 0f;
+            ambient2.Volume = 0f;
+            water.Volume = 0f;
+            ambient1.IsLooped = true;
+            ambient2.IsLooped = true;
+            water.IsLooped = true;
+            ambient1.Play();
+            ambient2.Play();
+            water.Play();
         }
 
         /// <summary>
@@ -166,10 +186,12 @@ namespace LudumDare26
 
             if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space))
             {
+                if (gameHero.Complete && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
                 if (gameHero.Dead && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
                 gameHero.UseObject(gameMap);
             }
 
+            gameHero.waterLevel = (gameMap.Height * gameMap.TileHeight) - waterLevel;
             gameHero.Update(gameTime, gameCamera, gameMap);
 
             gameCamera.Target = gameHero.Position;
@@ -202,7 +224,11 @@ namespace LudumDare26
                 }
             }
 
-            if (LayerDepths[gameHero.Layer] > 0.98f && LayerDepths[gameHero.Layer]<1.02f) gameHero.teleportFinished = true;
+            if (LayerDepths[gameHero.Layer] > 0.98f && LayerDepths[gameHero.Layer] < 1.02f && !gameHero.teleportFinished)
+            {
+                gameHero.teleportFinished = true;
+                AudioController.PlaySFX("teleport_out", 0.6f, 0f, 0f);
+            }
 
             lks = ks;
 
@@ -218,9 +244,9 @@ namespace LudumDare26
                     if (waterLevel > highestWaterLevel)
                     {
                         highestWaterLevel = waterLevel;
-                        if(!gameHero.Dead) gameHud.SoulsPerished += 100;
+                        if (!gameHero.Complete) gameHud.SoulsPerished += 100;
                     }
-                    else if (!gameHero.Dead) gameHud.SoulsPerished += 10;
+                    else if (!gameHero.Complete) gameHud.SoulsPerished += 10;
 
                     foreach (Water w in Waters)
                     {
@@ -234,7 +260,7 @@ namespace LudumDare26
                 gameHero.UnderWater = true;
                 //emptying = true;
 
-            if (gameHero.usingValve || emptying)
+            if (gameHero.usingValve || emptying || gameHero.Complete)
             {
                 waterLevel-=4;
                 foreach (Water w in Waters)
@@ -246,6 +272,8 @@ namespace LudumDare26
             }
 
             if (waterLevel < 200) emptying = false;
+
+            
 
             float startScale = 1.5f;
             foreach (Water w in Waters.OrderByDescending(wat => wat.Scale))
@@ -288,6 +316,22 @@ namespace LudumDare26
                 if (fadeAlpha > 0.99f)
                     Reset();
             }
+
+            if (gameHero.Position.Y > (gameMap.Height * gameMap.TileHeight)/2)
+            {
+                ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 1f, 0.001f);
+                ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 0f, 0.001f);
+            }
+            else
+            {
+                ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 0f, 0.001f);
+                ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 1f, 0.001f);
+            }
+
+            float wdistance = ((gameMap.Height * gameMap.TileHeight) - waterLevel) - gameHero.Position.Y;
+            float vol = 0.5f - ((0.5f / 800f) * wdistance);
+            water.Volume = MathHelper.Clamp(vol, 0f, 0.5f);
+
 
             base.Update(gameTime);
         }

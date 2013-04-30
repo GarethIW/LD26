@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LudumDare26.Mono.Windows</RootNamespace>
-    <AssemblyName>LudumDare26.Mono.Windows</AssemblyName>
+    <AssemblyName>OtherSpace</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -32,9 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Icon.ico</ApplicationIcon>
+    <ApplicationIcon>game.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\LudumDare26\LudumDare26\AudioController.cs">
+      <Link>AudioController.cs</Link>
+    </Compile>
     <Compile Include="..\LudumDare26\LudumDare26\Game.cs">
       <Link>Game.cs</Link>
     </Compile>
@@ -148,7 +151,9 @@
       <Link>Content\tilesheet2.png</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="game.ico" />
     <Content Include="Icon.ico" />
+    <Content Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TiledLib.Mono.Windows\TiledLib.Mono.Windows.csproj">
@@ -223,6 +228,52 @@
   <ItemGroup>
     <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\valve.xnb">
       <Link>Content\valve.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\ambient1.xnb">
+      <Link>Content\sfx\ambient1.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\ambient2.xnb">
+      <Link>Content\sfx\ambient2.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-grass.xnb">
+      <Link>Content\sfx\fstep-grass.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-metal.xnb">
+      <Link>Content\sfx\fstep-metal.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\fstep-wood.xnb">
+      <Link>Content\sfx\fstep-wood.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\valve.xnb">
+      <Link>Content\sfx\valve.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\water.xnb">
+      <Link>Content\sfx\water.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\teleport_in.xnb">
+      <Link>Content\sfx\teleport_in.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\teleport_out.xnb">
+      <Link>Content\sfx\teleport_out.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LudumDare26\LudumDare26\bin\x86\Debug\Content\sfx\splash.xnb">
+      <Link>Content\sfx\splash.xnb</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

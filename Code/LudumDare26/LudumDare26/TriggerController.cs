@@ -125,6 +125,7 @@ namespace LudumDare26
                         if (gameHero.Layer == layer)
                         {
                             trig.HasTriggered = true;
+                            if (trig.Object.Properties.Contains("Master")) gameHero.Complete = true;
                         }
                     }
             }
@@ -133,7 +134,13 @@ namespace LudumDare26
         public void Reset()
         {
             foreach (Trigger t in triggers) t.HasTriggered = false;
-            foreach (Trigger v in valves) v.HasTriggered = false;
+            foreach (Trigger v in valves)
+            {
+                v.HasTriggered = false;
+                v.Position = new Vector2(v.Object.Location.Center.X, v.Object.Location.Center.Y);
+                v.Speed = new Vector2(3f, 0.1f);
+            }
+
             WaterTriggered = false;
         }
 
@@ -239,18 +246,22 @@ namespace LudumDare26
                     break;
 
                 case 18:
-                    PromptController.Instance.AddPrompt("story15", PromptController.PromptType.Text, "Gerde hopes she can reach the Master Valve", true, 7000, 0);
-                    PromptController.Instance.AddPrompt("story16", PromptController.PromptType.Text, "before many more perish.", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story16", PromptController.PromptType.Text, "Gerde hopes she can reach the Master Valve", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story17", PromptController.PromptType.Text, "before many more perish.", true, 7000, 0);
                     break;
 
                 case 19:
-                    PromptController.Instance.AddPrompt("story19", PromptController.PromptType.Text, "Gerde seems to recall that there are", true, 7000, 0);
-                    PromptController.Instance.AddPrompt("story20", PromptController.PromptType.Text, "two more valves to find.", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story18", PromptController.PromptType.Text, "Gerde seems to recall that there are", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story19", PromptController.PromptType.Text, "two more valves to find.", true, 7000, 0);
                     break;
 
                 case 20:
-                    PromptController.Instance.AddPrompt("story17", PromptController.PromptType.Text, "Gerde allows herself a flicker of hope", true, 7000, 0);
-                    PromptController.Instance.AddPrompt("story18", PromptController.PromptType.Text, "before returning to the task at hand.", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story20", PromptController.PromptType.Text, "Gerde allows herself a flicker of hope", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story21", PromptController.PromptType.Text, "before returning to the task at hand.", true, 7000, 0);
+                    break;
+
+                case 21:
+                    PromptController.Instance.AddPrompt("story22", PromptController.PromptType.Text, "Just a few more steps...", true, 7000, 0);
                     break;
 
                 

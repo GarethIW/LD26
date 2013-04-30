@@ -13,6 +13,7 @@ namespace LudumDare26
 {
     class Hero
     {
+        static Random rand = new Random();
         public Vector2 Position;
         public Vector2 Speed;
 
@@ -21,6 +22,7 @@ namespace LudumDare26
         public float Scale = 0.6f;
 
         public bool Dead = false;
+        public bool Complete = false;
 
         Vector2 gravity = new Vector2(0f, 0.25f);
 
@@ -50,14 +52,17 @@ namespace LudumDare26
         bool teleporting = false;
         int teleportingDir = 0;
         float teleportScale = 1f;
-        public bool teleportFinished = false;
+        public bool teleportFinished = true;
 
         bool oppositeDirPushed = false;
 
         bool justUngrabbed = false;
 
         public bool UnderWater = false;
+        
         double drownTime = 0;
+
+        double fstepTime = 0;
 
         Vector2 grabbedPosition;
 
@@ -67,6 +72,11 @@ namespace LudumDare26
         bool respawning;
 
         Vector2 spawnPosition;
+
+        double valveSoundTime = 0;
+
+        public int waterLevel;
+        bool splashPlayed;
 
         public Hero(Vector2 spawnpos)
         {
@@ -93,7 +103,7 @@ namespace LudumDare26
             teleporting = false;
             teleportingDir = 0;
             teleportScale = 1f;
-            teleportFinished = false;
+            teleportFinished = true;
 
             oppositeDirPushed = false;
 
@@ -110,6 +120,7 @@ namespace LudumDare26
             Speed = Vector2.Zero;
 
             Dead = false;
+            Complete = false;
         }
 
         public void LoadContent(ContentManager content, GraphicsDevice graphicsDevice)
@@ -156,6 +167,27 @@ namespace LudumDare26
                 {
                     Animations["crawl"].Mix(skeleton, animTime, true, 0.5f);
                 }
+
+
+                 fstepTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                 if (fstepTime >= 500)
+                 {
+                     fstepTime = 0;
+                     if (!crouching && !falling)
+                     {
+                         Tile t = gameMap.GetTile(Position + new Vector2(0, 30), Layer);
+                         if (t != null)
+                         {
+                             if (t.Properties.Contains("Wood"))
+                                 AudioController.PlaySFX("fstep-wood", -0.2f, 0.2f);
+                             else if (t.Properties.Contains("Metal"))
+                                 AudioController.PlaySFX("fstep-metal", -0.2f, 0.2f);
+                             else AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
+                         }
+                         else AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
+                     }
+
+                 }
             }
 
             if (jumping)
@@ -236,11 +268,18 @@ namespace LudumDare26
                 Animations["turnvalve"].Apply(skeleton, animTime, true);
 
                 valveUseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                valveSoundTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
                 if (valveUseTime >= 5000)
                 {
                     usingValve = false;
                     TriggerController.Instance.DeactivateValve(this);
+                }
+
+                if (valveSoundTime >= 750)
+                {
+                    valveSoundTime = 0;
+                    AudioController.PlaySFX("valve", -0.2f, 0.2f);
                 }
             }
 
@@ -309,6 +348,17 @@ namespace LudumDare26
             Speed.X = 0f;
 
             UnderWater = false;
+
+            if (Position.Y < waterLevel) splashPlayed = false;
+            else
+            {
+                if (falling && !splashPlayed)
+                {
+                    splashPlayed = true;
+                    AudioController.PlaySFX("splash", 0.5f, 0f, 0f);
+                }
+            }
+
         }
 
         public void Draw(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, Camera gameCamera)
@@ -328,7 +378,7 @@ namespace LudumDare26
 
         public void MoveLeftRight(float dir)
         {
-            if (teleporting || usingValve || respawning || teleportScale<0.95f || Dead) return;
+            if (teleporting || usingValve || respawning || teleportScale<0.95f || Dead || Complete) return;
 
             if (grabbed)
             {
@@ -371,6 +421,7 @@ namespace LudumDare26
                         teleportingDir = Convert.ToInt16(o.Properties["Out"]);
                         teleporting = true;
                         teleportScale = 1f;
+                        AudioController.PlaySFX("teleport_in", 0.6f, 0f, 0f);
                         return;
                     }
                     if (Convert.ToInt16(o.Properties["Out"]) == Layer)
@@ -378,6 +429,7 @@ namespace LudumDare26
                         teleportingDir = Convert.ToInt16(o.Properties["In"]);
                         teleporting = true;
                         teleportScale = 1f;
+                        AudioController.PlaySFX("teleport_in", 0.6f, 0f, 0f);
                         return;
                     }
                 }
@@ -388,7 +440,7 @@ namespace LudumDare26
 
         public void Jump()
         {
-            if (teleporting || usingValve || respawning || teleportScale < 0.95f || Dead) return;
+            if (teleporting || usingValve || respawning || teleportScale < 0.95f || Dead || Complete) return;
 
             if (grabbed && (Position - grabbedPosition).Length()<5f && !oppositeDirPushed)
             {
@@ -420,7 +472,7 @@ namespace LudumDare26
 
         public void Crouch()
         {
-            if (teleporting || usingValve || respawning || teleportScale < 0.95f || Dead) return;
+            if (teleporting || usingValve || respawning || teleportScale < 0.95f || Dead || Complete) return;
 
             if (grabbed)
             {
@@ -490,6 +542,7 @@ namespace LudumDare26
                         jumping = false;
                         falling = false;
                         justUngrabbed = false;
+                        AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
                     }
                     
                 }

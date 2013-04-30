@@ -479,6 +479,22 @@ namespace TiledLib
             return null;
         }
 
+        public Tile GetTile(Vector2 position, int layer)
+        {
+            TileLayer tileLayer = GetLayer(layer.ToString()) as TileLayer;
+            if (tileLayer == null) return null;
+
+            position.X = (int)position.X;
+            position.Y = (int)position.Y;
+
+            Vector2 tilePosition = new Vector2((int)(position.X / TileWidth), (int)(position.Y / TileHeight));
+
+            if (tilePosition.X < 0 || tilePosition.Y < 0 || tilePosition.X > Width - 1 || tilePosition.Y > Height - 1)
+                return null;
+
+            return tileLayer.Tiles[(int)tilePosition.X, (int)tilePosition.Y];
+        }
+
         public void UnloadContent()
         {
             for(int i=0;i<Tiles.Count;i++)

@@ -98,6 +98,24 @@ namespace LudumDare26
 
                 if (soulsToCenterAmount > 0.98f) ReadyForRestart = true;
             }
+
+            if (gameHero.Complete)
+            {
+                ShowingSouls = true;
+                soulsToCenterAmount = MathHelper.Lerp(soulsToCenterAmount, 1f, 0.05f);
+                if (!endPromptsDone)
+                {
+                    PromptController.Instance.ClearPrompts();
+                    PromptController.Instance.AddPrompt("comp1", PromptController.PromptType.Text, " ", false, 0, 0);
+                    PromptController.Instance.AddPrompt("comp2", PromptController.PromptType.Text, " ", false, 0, 0);
+                    PromptController.Instance.AddPrompt("comp3", PromptController.PromptType.Text, "...but Gerde had saved untold numbers", false, 0, 4000);
+                    PromptController.Instance.AddPrompt("comp4", PromptController.PromptType.Text, "of her people. She was happy.", false, 0, 4000);
+                    PromptController.Instance.AddPrompt("comp5", PromptController.PromptType.Image, "use", false, 0, 8000);
+                    endPromptsDone = true;
+                }
+
+                if (soulsToCenterAmount > 0.98f) ReadyForRestart = true;
+            }
         }
 
         public void Draw(GraphicsDevice gd, SpriteBatch sb)
