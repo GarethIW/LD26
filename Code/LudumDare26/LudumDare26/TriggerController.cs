@@ -241,7 +241,7 @@ namespace LudumDare26
                 case 17:
                     PromptController.Instance.RemovePrompt("valve1");
                     PromptController.Instance.RemovePrompt("valve2");
-                    PromptController.Instance.AddPrompt("story14", PromptController.PromptType.Text, "Turning off the valves will give Gerede's", true, 7000, 0);
+                    PromptController.Instance.AddPrompt("story14", PromptController.PromptType.Text, "Turning off the valves will give Gerde's", true, 7000, 0);
                     PromptController.Instance.AddPrompt("story15", PromptController.PromptType.Text, "people time to escape, minimizing casualties.", true, 7000, 0);
                     break;
 
