@@ -66,7 +66,7 @@ namespace LudumDare26
 
         Vector2 grabbedPosition;
 
-        Vector2 checkPointPosition;
+        public Vector2 checkPointPosition;
         int checkPointLayer;
 
         bool respawning;
@@ -237,7 +237,7 @@ namespace LudumDare26
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 500f;
                 Animations["climb"].Apply(skeleton, animTime, false);
 
-                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 185), (0.08f/Animations["grab"].Duration) * animTime);
+                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 185), (0.085f/Animations["grab"].Duration) * animTime);
 
                 if ((Position - (grabbedPosition - new Vector2(20 * (-faceDir), 185))).Length() < 5f)
                     climbing = false;
@@ -365,7 +365,7 @@ namespace LudumDare26
         {
             if (teleportScale < 0.02f) return;
 
-            skeletonRenderer.Begin(gameCamera.CameraMatrix);
+            skeletonRenderer.Begin(graphicsDevice, gameCamera.CameraMatrix);
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
 
@@ -542,7 +542,16 @@ namespace LudumDare26
                         jumping = false;
                         falling = false;
                         justUngrabbed = false;
-                        AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
+                        Tile t = gameMap.GetTile(Position + new Vector2(0, 30), Layer);
+                        if (t != null)
+                        {
+                            if (t.Properties.Contains("Wood"))
+                                AudioController.PlaySFX("fstep-wood", -0.2f, 0.2f);
+                            else if (t.Properties.Contains("Metal"))
+                                AudioController.PlaySFX("fstep-metal", -0.2f, 0.2f);
+                            else AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
+                        }
+                        else AudioController.PlaySFX("fstep-grass", -0.2f, 0.2f);
                     }
                     
                 }

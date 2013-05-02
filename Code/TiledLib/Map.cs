@@ -344,7 +344,9 @@ namespace TiledLib
             TileLayer tileLayer = layer as TileLayer;
             if (tileLayer != null)
             {
-                Rectangle worldArea = new Rectangle((int)gameCamera.Position.X - (int)((float)gameCamera.Width / scale), (int)gameCamera.Position.Y - (int)(((float)gameCamera.Height*1.5) / scale), (int)((gameCamera.Width * 2)/scale), (int)((gameCamera.Height*3)/scale));
+                Rectangle worldArea = new Rectangle((int)gameCamera.Position.X - (int)(((float)gameCamera.Width *2f)/scale), (int)gameCamera.Position.Y - (int)(((float)gameCamera.Height*2)/scale), (int)((gameCamera.Width * 4)/scale), (int)((gameCamera.Height*4)/scale));
+
+                //Rectangle worldArea = new Rectangle(0, (int)gameCamera.Position.Y - (int)(((float)gameCamera.Height) * (2f-scale)), TileWidth * Width, (int)(((float)gameCamera.Height*2 ) * (3f-(2f*scale))));
 
                 // figure out the min and max tile indices to draw
                 int minX = Math.Max((int)Math.Floor((float)worldArea.Left / TileWidth), 0);

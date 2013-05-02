@@ -73,8 +73,8 @@ namespace TiledContentPipeline
 				}
 
 				// remove the margins from our calculations
-				imageWidth -= tileSet.Margin * 2;
-				imageHeight -= tileSet.Margin * 2;
+				imageWidth -= tileSet.Margin;
+				imageHeight -= tileSet.Margin;
 
 				// figure out how many frames fit on the X axis
 				int frameCountX = 1;
@@ -92,6 +92,9 @@ namespace TiledContentPipeline
 					imageHeight -= tileSet.Spacing;
 				}
 
+                frameCountX = 32;
+                frameCountY = 18;
+
 				// make our tiles. tiles are numbered by row, left to right.
 				for (int y = 0; y < frameCountY; y++)
 				{
@@ -105,9 +108,9 @@ namespace TiledContentPipeline
 						tile.Source = new Microsoft.Xna.Framework.Rectangle(rx, ry, tileSet.TileWidth, tileSet.TileHeight);
 
 						// get any properties from the tile set
-						if (tileSet.TileProperties.ContainsKey(y + x))
+						if (tileSet.TileProperties.ContainsKey((y * frameCountX) +  x))
 						{
-							tile.Properties = tileSet.TileProperties[y + x];
+							tile.Properties = tileSet.TileProperties[(y * frameCountX) + x];
 						}
 
 						// save the tile

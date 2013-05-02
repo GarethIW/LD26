@@ -62,6 +62,7 @@ namespace LudumDare26
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
         }
 
         /// <summary>
@@ -76,6 +77,7 @@ namespace LudumDare26
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
             Window.AllowUserResizing = false;
+            
             graphics.ApplyChanges();
 
             base.Initialize();
@@ -152,6 +154,7 @@ namespace LudumDare26
             ambient1.Play();
             ambient2.Play();
             water.Play();
+
         }
 
         /// <summary>
@@ -191,6 +194,23 @@ namespace LudumDare26
                 gameHero.UseObject(gameMap);
             }
 
+            //if (ks.IsKeyDown(Keys.F10) && !lks.IsKeyDown(Keys.F10))
+            //{
+                
+            //    graphics.ToggleFullScreen();
+            //    if (graphics.IsFullScreen)
+            //    {
+            //        graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            //        graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            //    }
+            //    else
+            //    {
+            //        graphics.PreferredBackBufferWidth = 1280;
+            //        graphics.PreferredBackBufferHeight = 720;
+            //    }
+            //    graphics.ApplyChanges();
+            //}
+
             gameHero.waterLevel = (gameMap.Height * gameMap.TileHeight) - waterLevel;
             gameHero.Update(gameTime, gameCamera, gameMap);
 
@@ -207,9 +227,12 @@ namespace LudumDare26
             for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
             {
                 LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f)) * 0.9f), 0.1f); //* (targetScale * 0.5f)
-                if (targetScale > 0f) targetScale -= 0.333f;
-                else LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - targetScale) * 0.4f, (1f - targetScale) * 0.5f, (1f - targetScale) * 0.9f) * 0f, 0.1f);
+                if (targetScale > 0f)
+                {
+                    LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f)) * 0.9f), 0.1f); //* (targetScale * 0.5f)
+                    targetScale -= 0.333f;
+                }
+                else LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f))) * 0f, 0.1f);
             }
             if (gameHero.Layer > 0)
             {
@@ -233,7 +256,7 @@ namespace LudumDare26
             lks = ks;
 
             waterRiseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (waterRiseTime >= 50)
+            if (waterRiseTime >= (((((gameMap.Height * gameMap.TileHeight) - gameHero.checkPointPosition.Y) -waterLevel) < 700) ? 60 : 30))
             {
                 waterRiseTime = 0;
 
@@ -368,13 +391,16 @@ namespace LudumDare26
                     }
 
 
-                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
+                spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointWrap, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
                 //spriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix);// * Matrix.CreateScale(MathHelper.Clamp(LayerDepths[l], 0.25f, 2f)) * Matrix.CreateTranslation(new Vector3(0f, 300f - (300f * LayerDepths[l]), 0f)));
 
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
-                gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
-                gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, LayerDepths[l]);
-                TriggerController.Instance.DrawValves(spriteBatch, l, valveTexture, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, gameHero);
+                if (LayerColors[l].ToVector4().W > 0.01f)
+                {
+                    gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal1", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, MathHelper.Clamp(LayerDepths[l], 0.25f, 2f));
+                    gameMap.DrawLayer(spriteBatch, l.ToString() + "Decal", gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, MathHelper.Clamp(LayerDepths[l], 0.25f, 2f));
+                    gameMap.DrawLayer(spriteBatch, l.ToString(), gameCamera, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, MathHelper.Clamp(LayerDepths[l], 0.25f, 2f));
+                    TriggerController.Instance.DrawValves(spriteBatch, l, valveTexture, l != gameHero.Layer ? LayerColors[l] : Color.White, (l != gameHero.Layer) ? true : false, gameHero);
+                }
                 spriteBatch.End();
 
                 

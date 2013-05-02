@@ -5,6 +5,7 @@
     <Size>48</Size>
     <Spacing>2</Spacing>
     <Style>Regular</Style>
+    <DefaultCharacter><![CDATA[,]]></DefaultCharacter>
     <CharacterRegions>
       <CharacterRegion>
         <Start>&#32;</Start>
