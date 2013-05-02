@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="105" height="130" tilewidth="60" tileheight="60">
- <tileset firstgid="1" name="tilesheet" tilewidth="60" tileheight="60" spacing="1" margin="1">
-  <image source="tilesheet.png" width="1954" height="1100"/>
+ <tileset firstgid="1" name="tilesheet" tilewidth="60" tileheight="60">
+  <image source="tilesheet.png" width="1920" height="1080"/>
   <tile id="96">
    <properties>
     <property name="Dir" value="In"/>
@@ -45,8 +45,8 @@
    </properties>
   </tile>
  </tileset>
- <tileset firstgid="577" name="tilesheet2" tilewidth="60" tileheight="60" spacing="1" margin="1">
-  <image source="tilesheet2.png" width="1954" height="1100"/>
+ <tileset firstgid="577" name="tilesheet2" tilewidth="60" tileheight="60">
+  <image source="tilesheet2.png" width="1920" height="1080"/>
  </tileset>
  <layer name="5Decal1" width="105" height="130">
   <data encoding="base64" compression="gzip">
@@ -105,7 +105,7 @@
  </layer>
  <layer name="2" width="105" height="130">
   <data encoding="base64" compression="gzip">
-   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
+   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
   </data>
  </layer>
  <layer name="1Decal1" width="105" height="130">
@@ -142,7 +142,7 @@
   </data>
  </layer>
  <objectgroup name="Spawn" width="105" height="130">
-  <object x="1484" y="7137" width="61" height="73"/>
+  <object x="1496" y="7146" width="61" height="73"/>
  </objectgroup>
  <objectgroup name="Portals" width="105" height="130">
   <object x="5698" y="6778" width="64" height="133">
@@ -327,7 +327,7 @@
   </object>
  </objectgroup>
  <objectgroup name="Triggers" width="105" height="130">
-  <object name="1" x="1459" y="7089" width="121" height="145"/>
+  <object name="1" x="1465" y="7098" width="121" height="145"/>
   <object name="2" x="1884" y="7077" width="172" height="156"/>
   <object name="4" x="2641" y="7019" width="167" height="245"/>
   <object name="5" x="2952" y="7114" width="64" height="103"/>

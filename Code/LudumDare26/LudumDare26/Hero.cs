@@ -237,7 +237,7 @@ namespace LudumDare26
                 animTime += gameTime.ElapsedGameTime.Milliseconds / 500f;
                 Animations["climb"].Apply(skeleton, animTime, false);
 
-                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 185), (0.085f/Animations["grab"].Duration) * animTime);
+                Position = Vector2.Lerp(Position, grabbedPosition - new Vector2(20*(-faceDir), 185), (0.1f/Animations["grab"].Duration) * animTime);
 
                 if ((Position - (grabbedPosition - new Vector2(20 * (-faceDir), 185))).Length() < 5f)
                     climbing = false;

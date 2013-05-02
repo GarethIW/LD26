@@ -73,7 +73,8 @@ namespace LudumDare26
                 waterAlpha = MathHelper.Lerp(waterAlpha, 1f, 0.05f);
             }
 
-            waterLevelHeight = MathHelper.Clamp((1f / ((gameMap.Height * gameMap.TileHeight) - (gameHero.Position.Y - 300f))) * (float)waterLevel, 0f, 1f); //((float)texHud.Height / (gameHero.Position.Y - 200f)) * (float)waterLevel;
+            //waterLevelHeight = MathHelper.Clamp((1f / ((gameMap.Height * gameMap.TileHeight) - (gameHero.Position.Y-200))) * (float)waterLevel, 0f, 1f); //((float)texHud.Height / (gameHero.Position.Y - 200f)) * (float)waterLevel;
+            waterLevelHeight = MathHelper.Clamp((1f / 700f) * (700f - (((float)(gameMap.TileHeight * gameMap.Height) - (float)waterLevel)-gameHero.Position.Y+200f)), 0f, 1f); //((float)texHud.Height / (gameHero.Position.Y - 200f)) * (float)waterLevel;
 
             waterAnimTime += gameTime.ElapsedGameTime.TotalMilliseconds;
             if (waterAnimTime >= 200)
@@ -133,15 +134,16 @@ namespace LudumDare26
             // Water level
             if (waterAlpha > 0f)
             {
-                sb.Draw(texHud, meterPosition, new Rectangle(75, 0, 75, texHud.Height), Color.White * waterAlpha, 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
+                sb.Draw(texHud, meterPosition, new Rectangle(75, 0, 75, texHud.Height), Color.White * waterAlpha, 0f, new Vector2(75 / 2, 0), new Vector2(1f,1.08f), SpriteEffects.None, 1);
                 sb.Draw(texHud, meterPosition + new Vector2(0, texHud.Height) + new Vector2(2, 2), new Rectangle(150, 0, 75, texHud.Height), Color.Black * waterAlpha, 0f, new Vector2(75 / 2, texHud.Height), new Vector2(1f, waterLevelHeight), SpriteEffects.None, 1);
+                sb.Draw(texHud, meterPosition + new Vector2(0, (texHud.Height - (texHud.Height * waterLevelHeight)) + 5f) + new Vector2(2, 2), new Rectangle(0, 78 + (75 * waterAnimFrame), 75, 72), Color.Black * waterAlpha, 0f, new Vector2(75 / 2, 75), 1f, SpriteEffects.None, 1);
                 sb.Draw(texHud, meterPosition + new Vector2(0, texHud.Height), new Rectangle(150, 0, 75, texHud.Height), Color.White * waterAlpha, 0f, new Vector2(75 / 2, texHud.Height), new Vector2(1f, waterLevelHeight), SpriteEffects.None, 1);
                 sb.Draw(texHud, meterPosition + new Vector2(0, (texHud.Height - (texHud.Height * waterLevelHeight)) + 5f), new Rectangle(0, 78 + (75*waterAnimFrame), 75, 72), Color.White * waterAlpha, 0f, new Vector2(75 / 2, 75), 1f, SpriteEffects.None, 1);
-                sb.Draw(texHud, meterPosition + new Vector2(0, -20) + new Vector2(2, 2), new Rectangle(0, 0, 75, 75), Color.Black * waterAlpha, 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
-                sb.Draw(texHud, meterPosition + new Vector2(0, -20), new Rectangle(0, 0, 75, 75), Color.White * waterAlpha, 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
-                if (waterLevelHeight > 0.8f)
+                //sb.Draw(texHud, meterPosition + new Vector2(0, -20) + new Vector2(2, 2), new Rectangle(0, 0, 75, 75), Color.Black * waterAlpha, 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
+                sb.Draw(texHud, meterPosition + new Vector2(0, -25), new Rectangle(0, 0, 75, 75), Color.White * waterAlpha, 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
+                if (waterLevelHeight > 0.9f)
                 {
-                    sb.Draw(texHud, meterPosition + new Vector2(0, -20), new Rectangle(0, 225, 75, 75), Color.White * (1f - (1f / 0.2f) * (1f - waterLevelHeight)), 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
+                    sb.Draw(texHud, meterPosition + new Vector2(0, -25), new Rectangle(0, 227, 75, 75), Color.White * (1f - (1f / 0.1f) * (1f - waterLevelHeight)), 0f, new Vector2(75 / 2, 0), 1f, SpriteEffects.None, 1);
                 }
             }
 

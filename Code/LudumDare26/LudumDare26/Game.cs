@@ -173,187 +173,190 @@ namespace LudumDare26
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
 
-            // TODO: Add your update logic here
-
-            KeyboardState ks = Keyboard.GetState();
-
-            if (ks.IsKeyDown(Keys.Left)) gameHero.MoveLeftRight(-1f);
-            else if (ks.IsKeyDown(Keys.Right)) gameHero.MoveLeftRight(1f);
-
-            if (ks.IsKeyDown(Keys.Up)) gameHero.Jump();
-            if (ks.IsKeyDown(Keys.Down)) gameHero.Crouch();
-
-            if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space))
+            if (IsActive)
             {
-                if (gameHero.Complete && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
-                if (gameHero.Dead && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
-                gameHero.UseObject(gameMap);
-            }
 
-            //if (ks.IsKeyDown(Keys.F10) && !lks.IsKeyDown(Keys.F10))
-            //{
-                
-            //    graphics.ToggleFullScreen();
-            //    if (graphics.IsFullScreen)
-            //    {
-            //        graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-            //        graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-            //    }
-            //    else
-            //    {
-            //        graphics.PreferredBackBufferWidth = 1280;
-            //        graphics.PreferredBackBufferHeight = 720;
-            //    }
-            //    graphics.ApplyChanges();
-            //}
+                KeyboardState ks = Keyboard.GetState();
 
-            gameHero.waterLevel = (gameMap.Height * gameMap.TileHeight) - waterLevel;
-            gameHero.Update(gameTime, gameCamera, gameMap);
+                if (ks.IsKeyDown(Keys.Left) || ks.IsKeyDown(Keys.A)) gameHero.MoveLeftRight(-1f);
+                else if (ks.IsKeyDown(Keys.Right) || ks.IsKeyDown(Keys.D)) gameHero.MoveLeftRight(1f);
 
-            gameCamera.Target = gameHero.Position;
-            gameCamera.Update(GraphicsDevice.Viewport.Bounds);
+                if (ks.IsKeyDown(Keys.Up) || ks.IsKeyDown(Keys.W)) gameHero.Jump();
+                if (ks.IsKeyDown(Keys.Down) || ks.IsKeyDown(Keys.D)) gameHero.Crouch();
 
-            gameTriggerController.Update(gameTime, gameHero);
-            gamePromptController.Update(gameTime);
-
-            gameHud.Update(gameTime, waterLevel, gameHero, gameMap);
-
-            // Scale layers according to player's layer
-            float targetScale = 1f;
-            for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
-            {
-                LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                if (targetScale > 0f)
+                if (ks.IsKeyDown(Keys.Space) && !lks.IsKeyDown(Keys.Space))
                 {
-                    LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f)) * 0.9f), 0.1f); //* (targetScale * 0.5f)
-                    targetScale -= 0.333f;
+                    if (gameHero.Complete && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
+                    if (gameHero.Dead && !resetting && Hud.Instance.ReadyForRestart) resetting = true;
+                    gameHero.UseObject(gameMap);
                 }
-                else LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f))) * 0f, 0.1f);
-            }
-            if (gameHero.Layer > 0)
-            {
-                targetScale = 1.5f;
-                for (int l = gameHero.Layer-1; l >=0; l--)
+
+                //if (ks.IsKeyDown(Keys.F10) && !lks.IsKeyDown(Keys.F10))
+                //{
+
+                //    graphics.ToggleFullScreen();
+                //    if (graphics.IsFullScreen)
+                //    {
+                //        graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+                //        graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+                //    }
+                //    else
+                //    {
+                //        graphics.PreferredBackBufferWidth = 1280;
+                //        graphics.PreferredBackBufferHeight = 720;
+                //    }
+                //    graphics.ApplyChanges();
+                //}
+
+                gameHero.waterLevel = (gameMap.Height * gameMap.TileHeight) - waterLevel;
+                gameHero.Update(gameTime, gameCamera, gameMap);
+
+                gameCamera.Target = gameHero.Position;
+                gameCamera.Update(GraphicsDevice.Viewport.Bounds);
+
+                gameTriggerController.Update(gameTime, gameHero);
+                gamePromptController.Update(gameTime);
+
+                gameHud.Update(gameTime, waterLevel, gameHero, gameMap);
+
+                // Scale layers according to player's layer
+                float targetScale = 1f;
+                for (int l = gameHero.Layer; l < LayerDepths.Length; l++)
                 {
                     LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
-                    if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0.85f, 0.1f);
-                    else if (gameHero.Layer == l) LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * 1f, 0.1f);
-                    else LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0f, 0.1f);
-                    targetScale += 0.5f;
+                    if (targetScale > 0f)
+                    {
+                        LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f)) * 0.9f), 0.1f); //* (targetScale * 0.5f)
+                        targetScale -= 0.333f;
+                    }
+                    else LayerColors[l] = Color.Lerp(LayerColors[l], new Color((1f - (targetScale * 0.5f)) * 0.4f, (1f - (targetScale * 0.5f)) * 0.5f, (1f - (targetScale * 0.5f))) * 0f, 0.1f);
                 }
-            }
-
-            if (LayerDepths[gameHero.Layer] > 0.98f && LayerDepths[gameHero.Layer] < 1.02f && !gameHero.teleportFinished)
-            {
-                gameHero.teleportFinished = true;
-                AudioController.PlaySFX("teleport_out", 0.6f, 0f, 0f);
-            }
-
-            lks = ks;
-
-            waterRiseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (waterRiseTime >= (((((gameMap.Height * gameMap.TileHeight) - gameHero.checkPointPosition.Y) -waterLevel) < 700) ? 60 : 30))
-            {
-                waterRiseTime = 0;
-
-                if (TriggerController.Instance.WaterTriggered)
+                if (gameHero.Layer > 0)
                 {
-                    waterLevel+=2;
-
-                    if (waterLevel > highestWaterLevel)
+                    targetScale = 1.5f;
+                    for (int l = gameHero.Layer - 1; l >= 0; l--)
                     {
-                        highestWaterLevel = waterLevel;
-                        if (!gameHero.Complete) gameHud.SoulsPerished += 100;
-                    }
-                    else if (!gameHero.Complete) gameHud.SoulsPerished += 10;
-
-                    foreach (Water w in Waters)
-                    {
-                        w.bounds.Offset(new Point(0, -2));
-                        w.bounds.Height+=2;
+                        LayerDepths[l] = MathHelper.Lerp(LayerDepths[l], targetScale, 0.1f);
+                        if (gameHero.Layer - l == 1) LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0.85f, 0.1f);
+                        else if (gameHero.Layer == l) LayerColors[l] = Color.Lerp(LayerColors[l], Color.White * 1f, 0.1f);
+                        else LayerColors[l] = Color.Lerp(LayerColors[l], new Color(targetScale * 0.01f, targetScale * 0.02f, targetScale * 0.1f) * 0f, 0.1f);
+                        targetScale += 0.5f;
                     }
                 }
-            }
 
-            if ((gameMap.Height * gameMap.TileHeight) - waterLevel < gameHero.Position.Y - 200f)
-                gameHero.UnderWater = true;
+                if (LayerDepths[gameHero.Layer] > 0.98f && LayerDepths[gameHero.Layer] < 1.02f && !gameHero.teleportFinished)
+                {
+                    gameHero.teleportFinished = true;
+                    AudioController.PlaySFX("teleport_out", 0.6f, 0f, 0f);
+                }
+
+                lks = ks;
+
+                waterRiseTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+                if (waterRiseTime >= (((((gameMap.Height * gameMap.TileHeight) - gameHero.checkPointPosition.Y) - waterLevel) < 600) ? 70 : 30))
+                {
+                    waterRiseTime = 0;
+
+                    if (TriggerController.Instance.WaterTriggered)
+                    {
+                        waterLevel += 2;
+
+                        if (waterLevel > highestWaterLevel)
+                        {
+                            highestWaterLevel = waterLevel;
+                            if (!gameHero.Complete) gameHud.SoulsPerished += 100;
+                        }
+                        else if (!gameHero.Complete) gameHud.SoulsPerished += 10;
+
+                        foreach (Water w in Waters)
+                        {
+                            w.bounds.Offset(new Point(0, -2));
+                            w.bounds.Height += 2;
+                        }
+                    }
+                }
+
+                if ((gameMap.Height * gameMap.TileHeight) - waterLevel < gameHero.Position.Y - 200f)
+                    gameHero.UnderWater = true;
                 //emptying = true;
 
-            if (gameHero.usingValve || emptying || gameHero.Complete)
-            {
-                waterLevel-=4;
-                foreach (Water w in Waters)
+                if (gameHero.usingValve || emptying || gameHero.Complete)
                 {
-                    w.bounds.Offset(new Point(0, 4));
-                    w.bounds.Height -= 4;
+                    waterLevel -= 4;
+                    foreach (Water w in Waters)
+                    {
+                        w.bounds.Offset(new Point(0, 4));
+                        w.bounds.Height -= 4;
+                    }
+
                 }
-                
+
+                if (waterLevel < 200) emptying = false;
+
+
+
+                float startScale = 1.5f;
+                foreach (Water w in Waters.OrderByDescending(wat => wat.Scale))
+                {
+                    w.Scale = MathHelper.Lerp(w.Scale, startScale + (gameHero.Layer * 0.25f), 0.1f);
+
+                    if (w.Scale > 0.25f) w.Alpha = MathHelper.Lerp(w.Alpha, w.Scale, 0.1f);
+                    else w.Alpha = MathHelper.Lerp(w.Alpha, 0f, 0.1f);
+
+                    if (w.Scale > 0f) w.Update(gameTime);
+                    startScale -= 0.1f;
+                }
+
+                startScale = 1.5f;
+                for (int c = 0; c < Clouds.Count; c++)
+                {
+                    Vector4 cl = Clouds[c];
+                    cl.Z = MathHelper.Lerp(cl.Z, startScale + (gameHero.Layer * 0.25f), 0.01f);
+                    cl.Y = ((((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height / 2)) - ((((float)GraphicsDevice.Viewport.Height / 2) / (float)(gameMap.Height * gameMap.TileHeight)) * (gameHero.Position.Y * 3))) + 100 * cl.Z);
+                    //cl.Y = ((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) * -(cl.Z * 1.5f);
+                    cl.X -= 0.1f;
+                    if (cl.X <= -cloudTexture.Width) cl.X = 0;
+
+                    if (cl.Z > 0.5f && cl.Z <= 1f) cl.W = MathHelper.Lerp(cl.W, 1f, 0.01f);
+                    else if (cl.Z > 0f && cl.Z <= 1f) cl.W = MathHelper.Lerp(cl.W, cl.Z, 0.01f);
+                    else if (cl.Z > 1f && cl.Z <= 1.25f) cl.W = MathHelper.Lerp(cl.W, 1f, 0.01f);
+                    else if (cl.Z > 1.25f) cl.W = MathHelper.Lerp(cl.W, 0f, 0.01f);
+                    else cl.W = MathHelper.Lerp(cl.W, 0f, 0.01f);
+
+                    //if (cl.Z < 2f) cl.W = MathHelper.Lerp(cl.W, 1f, 0.03f);
+
+                    Clouds[c] = cl;
+                    startScale -= 0.1f;
+                }
+
+
+                if (!resetting)
+                {
+                    fadeAlpha = MathHelper.Lerp(fadeAlpha, 0f, 0.05f);
+                }
+                else
+                {
+                    fadeAlpha = MathHelper.Lerp(fadeAlpha, 1f, 0.05f);
+                    if (fadeAlpha > 0.99f)
+                        Reset();
+                }
+
+                if (gameHero.Position.Y > (gameMap.Height * gameMap.TileHeight) / 2)
+                {
+                    ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 1f, 0.001f);
+                    ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 0f, 0.001f);
+                }
+                else
+                {
+                    ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 0f, 0.001f);
+                    ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 1f, 0.001f);
+                }
+
+                float wdistance = ((gameMap.Height * gameMap.TileHeight) - waterLevel) - gameHero.Position.Y;
+                float vol = 0.5f - ((0.5f / 800f) * wdistance);
+                water.Volume = MathHelper.Clamp(vol, 0f, 0.5f);
             }
-
-            if (waterLevel < 200) emptying = false;
-
-            
-
-            float startScale = 1.5f;
-            foreach (Water w in Waters.OrderByDescending(wat => wat.Scale))
-            {
-                w.Scale = MathHelper.Lerp(w.Scale, startScale + (gameHero.Layer * 0.25f), 0.1f);
-
-                if (w.Scale > 0.25f) w.Alpha = MathHelper.Lerp(w.Alpha, w.Scale, 0.1f);
-                else w.Alpha = MathHelper.Lerp(w.Alpha, 0f, 0.1f);
-
-                if(w.Scale>0f) w.Update(gameTime);
-                startScale -= 0.1f;
-            }
-
-            startScale = 1.5f;
-            for(int c = 0; c<Clouds.Count;c++)
-            {
-                Vector4 cl = Clouds[c];
-                cl.Z = MathHelper.Lerp(cl.Z, startScale + (gameHero.Layer * 0.25f), 0.01f);
-                cl.Y = ((((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) - ((((float)GraphicsDevice.Viewport.Height/2) / (float)(gameMap.Height * gameMap.TileHeight)) * (gameHero.Position.Y*3)))  +100*cl.Z);
-                //cl.Y = ((gameCamera.Position.Y) - (GraphicsDevice.Viewport.Height/2)) * -(cl.Z * 1.5f);
-                cl.X -= 0.1f;
-                if (cl.X <= -cloudTexture.Width) cl.X = 0;
-
-                if (cl.Z > 0.5f) cl.W = MathHelper.Lerp(cl.W, 1f, 0.01f);
-                else if (cl.Z > 0f) cl.W = MathHelper.Lerp(cl.W, cl.Z, 0.01f);
-                else cl.W = MathHelper.Lerp(cl.W, 0f, 0.01f);
-
-                Clouds[c] = cl;
-                startScale -= 0.1f;
-            }
-
-
-            if (!resetting)
-            {
-                fadeAlpha = MathHelper.Lerp(fadeAlpha, 0f, 0.05f);
-            }
-            else
-            {
-                fadeAlpha = MathHelper.Lerp(fadeAlpha, 1f, 0.05f);
-                if (fadeAlpha > 0.99f)
-                    Reset();
-            }
-
-            if (gameHero.Position.Y > (gameMap.Height * gameMap.TileHeight)/2)
-            {
-                ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 1f, 0.001f);
-                ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 0f, 0.001f);
-            }
-            else
-            {
-                ambient1.Volume = MathHelper.Lerp(ambient1.Volume, 0f, 0.001f);
-                ambient2.Volume = MathHelper.Lerp(ambient2.Volume, 1f, 0.001f);
-            }
-
-            float wdistance = ((gameMap.Height * gameMap.TileHeight) - waterLevel) - gameHero.Position.Y;
-            float vol = 0.5f - ((0.5f / 800f) * wdistance);
-            water.Volume = MathHelper.Clamp(vol, 0f, 0.5f);
 
 
             base.Update(gameTime);
@@ -384,7 +387,7 @@ namespace LudumDare26
 
                 
                 foreach (Vector4 cloud in Clouds.OrderBy(cl => cl.Z))
-                    if (cloud.Z < LayerDepths[l] && cloud.Z>0f && cloud.Z<1f)
+                    if (cloud.Z < LayerDepths[l] && cloud.Z>0f)
                     {
                         if (l == LayerDepths.Length - 1) DrawCloud(spriteBatch, cloud);
                         else if (cloud.Z >= LayerDepths[l + 1]) DrawCloud(spriteBatch, cloud);
@@ -426,7 +429,7 @@ namespace LudumDare26
                 if (w.Scale >= LayerDepths[0] && w.Scale<1.6f && w.Scale>0f) w.Draw(gameCamera);
 
             foreach (Vector4 cloud in Clouds.OrderBy(cl => cl.Z))
-                if (cloud.Z >= LayerDepths[0] && cloud.Z < 1f && cloud.Z>0f) DrawCloud(spriteBatch, cloud);
+                if (cloud.Z >= LayerDepths[0] && cloud.Z > 0f) DrawCloud(spriteBatch, cloud);
 
             spriteBatch.Begin();
             gamePromptController.Draw(GraphicsDevice, spriteBatch);
@@ -447,7 +450,7 @@ namespace LudumDare26
             sb.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, gameCamera.CameraMatrix * Matrix.CreateScale(cloud.Z) * Matrix.CreateTranslation(new Vector3(0f, MathHelper.Clamp(100f/cloud.Z,0f,200f), 0f)));
             for (int x = -cloudTexture.Width; x < (gameMap.Width * gameMap.TileWidth) + cloudTexture.Width; x += (int)((float)cloudTexture.Width))
             {
-                 sb.Draw(cloudTexture, new Vector2((x + cloud.X)/cloud.Z , -100f+MathHelper.Clamp(cloud.Y, 0f, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 1);
+                 sb.Draw(cloudTexture, new Vector2((x/cloud.Z)+cloud.X , -100f+MathHelper.Clamp(cloud.Y, 0f, gameMap.Height * gameMap.TileHeight)), null, Color.White * cloud.W, 0f, new Vector2(cloudTexture.Width, cloudTexture.Height)/2, 1f/cloud.Z, SpriteEffects.None, 0);
             }
             sb.End();
         }

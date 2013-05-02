@@ -92,9 +92,6 @@ namespace TiledContentPipeline
 					imageHeight -= tileSet.Spacing;
 				}
 
-                frameCountX = 32;
-                frameCountY = 18;
-
 				// make our tiles. tiles are numbered by row, left to right.
 				for (int y = 0; y < frameCountY; y++)
 				{
