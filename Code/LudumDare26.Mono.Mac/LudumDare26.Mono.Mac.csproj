@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F0ADABD3-6A72-4E80-9356-B69D009E00AC}</ProjectGuid>
+    <ProjectTypeGuids>{948B3504-5B70-4649-8FE4-BDE1FB46EC69};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>LudumDare26.Mono.Mac</RootNamespace>
+    <MonoMacResourcePrefix>Resources</MonoMacResourcePrefix>
+    <AssemblyName>LudumDare26.Mono.Mac</AssemblyName>
+    <SuppressXamMacUpsell>True</SuppressXamMacUpsell>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>false</UseSGen>
+    <PlatformTarget>x86</PlatformTarget>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CreatePackage>false</CreatePackage>
+    <CodeSigningKey>Mac Developer</CodeSigningKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <PlatformTarget>x86</PlatformTarget>
+    <LinkMode>Full</LinkMode>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <CreatePackage>true</CreatePackage>
+    <CodeSigningKey>Developer ID Application</CodeSigningKey>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x86\AppStore</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseSGen>false</UseSGen>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <PlatformTarget>x86</PlatformTarget>
+    <LinkMode>Full</LinkMode>
+    <PackageSigningKey>3rd Party Mac Developer Installer</PackageSigningKey>
+    <EnableCodeSigning>true</EnableCodeSigning>
+    <ConsolePause>false</ConsolePause>
+    <EnablePackageSigning>true</EnablePackageSigning>
+    <CreatePackage>true</CreatePackage>
+    <CodeSigningKey>3rd Party Mac Developer Application</CodeSigningKey>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="MonoMac">
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\MacOS\Debug\MonoMac.dll</HintPath>
+    </Reference>
+    <Reference Include="GamepadBridge">
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\MacOS\Debug\GamepadBridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network">
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\MacOS\Debug\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoGame.Framework">
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\MacOS\Debug\MonoGame.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Tao.Sdl">
+      <HintPath>..\..\..\MonoGame\MonoGame.Framework\bin\MacOS\Debug\Tao.Sdl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Content\" />
+    <Folder Include="Spine\" />
+    <Folder Include="Spine\Attachment\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Info.plist" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Mono\MonoMac\v0.0\Mono.MonoMac.targets" />
+  <ItemGroup>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\blank.xnb">
+      <Link>Content\blank.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\map.xnb">
+      <Link>Content\map.xnb</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\spinegirl.atlas">
+      <Link>Content\spinegirl.atlas</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\spinegirl.json">
+      <Link>Content\spinegirl.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\spinegirl.png">
+      <Link>Content\spinegirl.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\LudumDare26.Mono.Linux\bin\Debug\Content\tilesheet.png">
+      <Link>Content\tilesheet.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Animation.cs">
+      <Link>Spine\Animation.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Atlas.cs">
+      <Link>Spine\Atlas.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\BaseAtlas.cs">
+      <Link>Spine\BaseAtlas.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Bone.cs">
+      <Link>Spine\Bone.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\BoneData.cs">
+      <Link>Spine\BoneData.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Json.cs">
+      <Link>Spine\Json.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Skeleton.cs">
+      <Link>Spine\Skeleton.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\SkeletonData.cs">
+      <Link>Spine\SkeletonData.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\SkeletonJson.cs">
+      <Link>Spine\SkeletonJson.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\SkeletonRenderer.cs">
+      <Link>Spine\SkeletonRenderer.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Skin.cs">
+      <Link>Spine\Skin.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Slot.cs">
+      <Link>Spine\Slot.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\SlotData.cs">
+      <Link>Spine\SlotData.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\SpriteBatcher.cs">
+      <Link>Spine\SpriteBatcher.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Attachments\AtlasAttachmentLoader.cs">
+      <Link>Spine\Attachment\AtlasAttachmentLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Attachments\Attachment.cs">
+      <Link>Spine\Attachment\Attachment.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Attachments\AttachmentLoader.cs">
+      <Link>Spine\Attachment\AttachmentLoader.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Attachments\AttachmentType.cs">
+      <Link>Spine\Attachment\AttachmentType.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Spine\Attachments\RegionAttachment.cs">
+      <Link>Spine\Attachment\RegionAttachment.cs</Link>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="..\LudumDare26\LudumDare26\Game.cs">
+      <Link>Game.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Helper.cs">
+      <Link>Helper.cs</Link>
+    </Compile>
+    <Compile Include="..\LudumDare26\LudumDare26\Hero.cs">
+      <Link>Hero.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TiledLib.Mono.Mac\TiledLib.Mono.Mac.csproj">
+      <Project>{731C5469-FB73-4D4D-9EE5-64DC4FF568C3}</Project>
+      <Name>TiledLib.Mono.Mac</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
